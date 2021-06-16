@@ -102,8 +102,6 @@ export default function Game() {
     canvas.addEventListener("touchmove", movePaddle);
 
     function movePaddle(e) {
-      let rect = canvas.getBoundingClientRect();
-
       user.x = e.clientX - user.width / 2;
     }
 
