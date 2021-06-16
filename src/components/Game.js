@@ -99,10 +99,14 @@ export default function Game() {
 
     // paddle control
     canvas.addEventListener("mousemove", movePaddle);
-    canvas.addEventListener("touchdown", movePaddle);
+    canvas.addEventListener("touchmove", movePaddleMobile);
 
     function movePaddle(e) {
       user.x = e.clientX - user.width / 2;
+    }
+
+    function movePaddleMobile(e) {
+      user.x = e.touches[0].clientX - user.width / 2;
     }
 
     // collision detection
