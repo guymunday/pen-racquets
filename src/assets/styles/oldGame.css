@@ -830,8 +830,7 @@ dt,
 li {
   margin-bottom: 1rem;
 }
-.button-base,
-button {
+.button-base {
   width: 100%;
   display: block;
   padding: 15px;

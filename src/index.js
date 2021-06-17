@@ -2,13 +2,26 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { GlobalProvider } from "./reducer/gameReducer";
+import Layout from "./components/Layout";
+import { createGlobalStyle } from "styled-components";
+import "./assets/styles/oldGame.css";
+import reset from "./assets/styles/reset";
+import global from "./assets/styles/global";
+
+const GlobalStyle = createGlobalStyle`
+  ${reset}
+  ${global}
+`;
 
 export default function Root() {
   return (
     <>
       <React.StrictMode>
+        <GlobalStyle />
         <GlobalProvider>
-          <App />
+          <Layout>
+            <App />
+          </Layout>
         </GlobalProvider>
       </React.StrictMode>
     </>

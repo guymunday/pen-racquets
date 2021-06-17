@@ -1,11 +1,7 @@
 import * as React from "react";
 import { createContext, useReducer, useContext } from "react";
 
-let initialGameContext = {
-  firstPrize: "",
-  secondPrize: "",
-  currentPrize: null,
-};
+let initialGameContext = {};
 
 const GameStateContext = createContext(initialGameContext);
 const GameDispatchContext = createContext();
@@ -18,28 +14,28 @@ const gameReducer = (state, action) => {
         id: action.id,
       };
     }
-    case "UPDATE_PRIZE": {
+    case "UPDATE_SCORE": {
       return {
         ...state,
-        currentPrize: action.prize,
+        score: action.score,
       };
     }
-    case "UPDATE_BACKUP_PRIZE": {
+    case "UPDATE_BRONZE_PRIZE": {
       return {
         ...state,
-        previousPrize: action.prize,
+        bronzePrize: action.prize,
       };
     }
-    case "UPDATE_FIRST_PRIZE": {
+    case "UPDATE_SILVER_PRIZE": {
       return {
         ...state,
-        firstPrize: action.first,
+        silverPrize: action.prize,
       };
     }
-    case "UPDATE_SECOND_PRIZE": {
+    case "UPDATE_GOLD_PRIZE": {
       return {
         ...state,
-        secondPrize: action.second,
+        goldPrize: action.first,
       };
     }
     case "UPDATE_AUDIO": {

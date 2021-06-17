@@ -1,12 +1,9 @@
 import { css } from "styled-components";
 
 const global = css`
-  :root {
-    --offwhite: #f8f8ec;
-  }
-
-  main {
-    font-family: "TTBarrels";
+  body {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 20px;
   }
 
   a {
@@ -20,48 +17,29 @@ const global = css`
     width: 100%;
   }
 
-  img.swirl {
-    width: 50%;
-    margin: 20px auto;
-  }
-
-  button,
   .button {
-    background: transparent;
-    font-family: "TTBarrels";
-    outline: none;
-    font-size: 1rem;
-    border: 1px solid #000;
-    transition: 0.3s ease;
-    width: 100%;
-    padding: 15px;
+    border: 1px solid black;
+    padding: 10px 20px;
     display: inline-block;
-    text-transform: uppercase;
-    cursor: pointer;
+    transition: all 0.3s ease;
     :hover {
-      background: #000;
+      background: black;
       color: white;
     }
   }
 
   .button-alt {
-    position: relative;
-    display: inline-block;
-    background: transparent;
-    font-family: "TTBarrels";
+    background: none;
+    border: none;
     outline: none;
-    font-size: 1rem;
-    border: 1px solid #fff;
-    transition: 0.3s ease;
-    color: #fff;
-    padding: 15px;
-    width: 100%;
-    text-transform: uppercase;
+    padding: 0;
+    margin: 0;
+    text-transform: none;
+    display: inline-block;
+    font-family: inherit;
+    font-size: inherit;
     cursor: pointer;
-    :hover {
-      background: #fff;
-      color: #000;
-    }
+    text-decoration: underline;
   }
 `;
 
