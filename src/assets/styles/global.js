@@ -1,9 +1,23 @@
 import { css } from "styled-components";
 
 const global = css`
+  :root {
+    --off-white: #e5e0ce;
+  }
+
   body {
     font-family: "Cormorant Garamond", serif;
     font-size: 20px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Canopee", serif;
+    font-weight: 400;
   }
 
   a {

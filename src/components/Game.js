@@ -5,31 +5,196 @@ import {
   useGameDispatchContext,
 } from "../reducer/gameReducer";
 import { Redirect } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { loadImage } from "../actions/actions";
+import gsap from "gsap";
 
 // images
 import lemonBall from "../assets/images/lemon.png";
+import crowd from "../assets/images/crowd.png";
+
+gsap.config({ nullTargetWarn: false });
 
 const GameStyles = styled.div`
   background-color: #cf9970;
   width: 100%;
   position: relative;
-  min-height: 500px;
+  min-height: 650px;
+  overflow: hidden;
   canvas {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  #crowd-image {
+    position: absolute;
+    bottom: -1%;
+    right: 0;
+    width: 110%;
+  }
+  .game-loading {
+    position: absolute;
+    color: var(--off-white);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .game-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    pointer-events: none;
+    .timer {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: black;
+      color: var(--off-white);
+      padding: 0 10px;
+    }
+    .intro-counter {
+      position: absolute;
+      color: var(--off-white);
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      font-size: 87px;
+    }
+    .score-counter {
+      position: absolute;
+      color: var(--off-white);
+      top: 5%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      font-size: 60px;
+    }
+    .help-text {
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
+    .match-text {
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      font-size: 87px;
+      color: var(--off-white);
+    }
+  }
 `;
 
-export default function Game({ data }) {
+export default function Game({ data, tries }) {
+  const [loading, setLoading] = React.useState(true);
   const [gameScore, setGameScore] = React.useState(0);
+  const [counter, setCounter] = React.useState(3);
+  const [timer, setTimer] = React.useState(3);
   const [hasTimedOut, setHasTimedOut] = React.useState(false);
-
+  const [cookies, setCookie] = useCookies(["tries"]);
   const dispatch = useGameDispatchContext();
-  const { id, score } = useGameStateContext();
+  const { id, score, prize } = useGameStateContext();
 
-  const initialiseGame = () => {
+  const bronze = data?.data?.data?.settings?.point_bronze;
+  const silver = data?.data?.data?.settings?.point_silver;
+  const gold = data?.data?.data?.settings?.point_gold;
+
+  function saveToCookies() {
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0);
+    tomorrow.setMinutes(0);
+    tomorrow.setMilliseconds(0);
+
+    if (!cookies.tries) {
+      setCookie("tries", `${tries}`, { path: "/", expires: tomorrow });
+    } else {
+      let attempts = parseInt(cookies.tries) - 1;
+      setCookie("tries", attempts.toString(), {
+        path: "/",
+        expires: tomorrow,
+      });
+    }
+  }
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      counter <= 3 && counter > 0 && setCounter(counter - 1);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [counter]);
+
+  React.useEffect(() => {
+    const timeout = setTimeout(() => {
+      counter <= 0 && timer > 0 && setTimer(timer - 1);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [counter, timer]);
+
+  React.useEffect(() => {
+    if (timer === 0) {
+      setTimeout(() => {
+        setHasTimedOut(true);
+      }, 1000);
+
+      dispatch({ type: "UPDATE_SCORE", score: gameScore });
+
+      if (gameScore < bronze) {
+        dispatch({ type: "UPDATE_PRIZE", prize: "none" });
+      } else if (gameScore >= bronze && gameScore < silver) {
+        dispatch({ type: "UPDATE_PRIZE", prize: "bronze" });
+      } else if (gameScore >= silver && gameScore < gold) {
+        dispatch({ type: "UPDATE_PRIZE", prize: "silver" });
+      } else if (gameScore >= gold) {
+        dispatch({ type: "UPDATE_PRIZE", prize: "gold" });
+      }
+    }
+  }, [timer]);
+
+  // React.useEffect(() => {
+  //   if (prize === "none") {
+  //     alert("none");
+  //   } else if (prize === "bronze") {
+  //     alert("bronze");
+  //   } else if (prize === "bronx=ze") {
+  //     alert("silver");
+  //   }
+  // }, [prize]);
+
+  // animations
+
+  React.useEffect(() => {
+    if (timer < 59) {
+      gsap.to(".fade-out", {
+        duration: 0.4,
+        autoAlpha: 0,
+      });
+    }
+  }, [timer]);
+
+  React.useEffect(() => {
+    if (timer === 0) {
+      gsap.to("#pong", {
+        duration: 0.4,
+        autoAlpha: 0,
+      });
+    }
+  }, [timer]);
+
+  React.useEffect(() => {
+    if (timer === 0) {
+      gsap.from(".fade-in", {
+        duration: 0.4,
+        autoAlpha: 0,
+      });
+    }
+  }, [timer]);
+
+  function initialiseGame() {
     // select canvas
     const canvas = document.getElementById("pong");
     const ctx = canvas.getContext("2d");
@@ -115,7 +280,7 @@ export default function Game({ data }) {
       drawNet();
 
       // draw the scores
-      drawText(user.score, canvas.width / 2, canvas.height / 5, "white");
+      // drawText(user.score, canvas.width / 2, canvas.height / 5, "white");
       // drawText(com.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
 
       // draw paddles
@@ -160,10 +325,11 @@ export default function Game({ data }) {
 
     // reset ball
     function resetBall() {
+      ball.speed = 5;
+
       ball.x = canvas.width / 2;
       ball.y = canvas.height / 2;
 
-      ball.speed = 5;
       ball.velocityY = -ball.velocityY;
     }
 
@@ -201,7 +367,7 @@ export default function Game({ data }) {
         ball.velocityY = direction * ball.speed * Math.cos(angleRad);
 
         // everytime the ball hits, increase the speed
-        ball.speed += 0.6;
+        ball.speed += 0.8;
       }
       // update the score
       if (ball.y - ball.radius < 0) {
@@ -222,11 +388,27 @@ export default function Game({ data }) {
 
     // loop the render
     const framesPerSecond = 50;
-    setInterval(gameInit, 1000 / framesPerSecond);
-  };
+
+    setInterval(renderGame, 1000 / framesPerSecond);
+
+    setTimeout(() => {
+      setInterval(gameInit, 1000 / framesPerSecond);
+    }, 3000);
+  }
 
   React.useEffect(() => {
-    id && initialiseGame();
+    if (id && !loading) {
+      initialiseGame();
+      saveToCookies();
+    }
+  }, [loading]);
+
+  React.useEffect(() => {
+    loadImage(crowd).then(() => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    });
   }, []);
 
   if (!id) {
@@ -236,13 +418,46 @@ export default function Game({ data }) {
   return (
     <>
       <GameStyles>
-        <img src={lemonBall} alt="" id="ball" style={{ display: "none" }} />
-        <canvas
-          id="pong"
-          width={300}
-          height={400}
-          style={{ touchAction: "none" }}
-        />
+        {loading ? (
+          <>
+            <h1 className="game-loading">Loading...</h1>
+          </>
+        ) : (
+          <>
+            <img src={lemonBall} alt="" id="ball" style={{ display: "none" }} />
+            <img src={crowd} alt="" id="crowd-image" />
+
+            {!hasTimedOut && (
+              <canvas
+                id="pong"
+                width={300}
+                height={400}
+                style={{ touchAction: "none" }}
+              />
+            )}
+
+            <div className="game-container">
+              {timer >= 58 && (
+                <h1 className="intro-counter fade-out">
+                  {counter > 0 ? counter : "PLAY!"}
+                </h1>
+              )}
+              {timer < 60 && (
+                <h1 className="score-counter">
+                  {timer > 0 ? gameScore : score}
+                </h1>
+              )}
+              <h1 className="timer">{timer}</h1>
+              {timer >= 58 && (
+                <p className="help-text fade-out">
+                  {data?.data?.data?.settings?.arrow_text}
+                </p>
+              )}
+
+              {timer === 0 && <h1 className="match-text fade-in">MATCH!</h1>}
+            </div>
+          </>
+        )}
       </GameStyles>
     </>
   );

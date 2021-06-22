@@ -8,10 +8,11 @@ export default function App() {
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState({});
   const tries = data?.data?.data?.settings?.total_tries;
+  const apiUrl = "https://penhaligons.wildishandco.co.uk";
 
   React.useEffect(() => {
     axios
-      .get("https://penhaligons.wildishandco.co.uk/api/v1/content")
+      .get(`${apiUrl}/api/v1/content`)
       .then((res) => {
         setData(res);
         setTimeout(() => {
@@ -28,15 +29,16 @@ export default function App() {
 
   return (
     <>
-      {loading && <h1>Loading...</h1>}
-      {!loading && (
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : (
         <Router>
           <Switch>
             <Route exact path="/">
-              <Home data={data} tries={tries} />
+              <Home data={data} tries={tries} apiUrl={apiUrl} />
             </Route>
             <Route path="/play">
-              <Game data={data} tries={tries} />
+              <Game data={data} tries={tries} apiUrl={apiUrl} />
             </Route>
           </Switch>
         </Router>

@@ -20,22 +20,10 @@ const gameReducer = (state, action) => {
         score: action.score,
       };
     }
-    case "UPDATE_BRONZE_PRIZE": {
+    case "UPDATE_PRIZE": {
       return {
         ...state,
-        bronzePrize: action.prize,
-      };
-    }
-    case "UPDATE_SILVER_PRIZE": {
-      return {
-        ...state,
-        silverPrize: action.prize,
-      };
-    }
-    case "UPDATE_GOLD_PRIZE": {
-      return {
-        ...state,
-        goldPrize: action.first,
+        prize: action.prize,
       };
     }
     case "UPDATE_AUDIO": {

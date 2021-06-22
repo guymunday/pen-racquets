@@ -15,7 +15,7 @@ import umpire from "../assets/images/umpire.png";
 const HomeStyles = styled.div`
   text-align: center;
   position: relative;
-  min-height: 500px;
+  min-height: 650px;
   overflow: hidden;
 
   background-color: #ebd668;
@@ -44,13 +44,16 @@ const HomeStyles = styled.div`
     padding: 20px;
     max-width: 500px;
     margin: auto;
+    h1 {
+      font-size: 86px;
+    }
     .home-button {
       margin: 100px auto;
     }
   }
 `;
 
-export default function Home({ data, tries }) {
+export default function Home({ data, tries, apiUrl }) {
   const dispatch = useGameDispatchContext();
   const { id } = useGameStateContext();
 
@@ -59,7 +62,7 @@ export default function Home({ data, tries }) {
 
   React.useEffect(() => {
     axios
-      .post("https://penhaligons.wildishandco.co.uk/api/v1/start", {
+      .post(`${apiUrl}/api/v1/start`, {
         try: 3,
       })
       .then((res) =>
