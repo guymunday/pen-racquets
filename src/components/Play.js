@@ -429,7 +429,11 @@ export default function Play({ data, tries }) {
           id="pong"
           width={300}
           height={400}
-          style={{ touchAction: "none" }}
+          style={{
+            touchAction: "none",
+            borderLeft: "10px var(--off-white) solid",
+            borderRight: "10px var(--off-white) solid",
+          }}
         />
 
         <div className="game-container">
