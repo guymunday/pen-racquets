@@ -1,8 +1,11 @@
 import React from "react";
 import axios from "axios";
 import { Switch, BrowserRouter as Router, Route } from "react-router-dom";
-import Game from "./components/Game";
+import Play from "./components/Play";
 import Home from "./components/Home";
+import PrizeReveal from "./components/Prize";
+import Transition from "./components/Transition";
+import GameLayout from "./components/GameLayout";
 
 export default function App() {
   const [loading, setLoading] = React.useState(true);
@@ -15,9 +18,7 @@ export default function App() {
       .get(`${apiUrl}/api/v1/content`)
       .then((res) => {
         setData(res);
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
+        setLoading(false);
       })
       .catch((error) =>
         console.log(
@@ -30,16 +31,23 @@ export default function App() {
   return (
     <>
       {loading ? (
-        <h1>Loading...</h1>
+        <div className="loading-container">
+          <h1>Loading...</h1>
+        </div>
       ) : (
         <Router>
           <Switch>
             <Route exact path="/">
               <Home data={data} tries={tries} apiUrl={apiUrl} />
             </Route>
-            <Route path="/play">
-              <Game data={data} tries={tries} apiUrl={apiUrl} />
-            </Route>
+            <GameLayout>
+              <Route path="/play">
+                <Play data={data} tries={tries} apiUrl={apiUrl} />
+              </Route>
+              <Route path="/results">
+                <PrizeReveal data={data} tries={tries} apiUrl={apiUrl} />
+              </Route>
+            </GameLayout>
           </Switch>
         </Router>
       )}

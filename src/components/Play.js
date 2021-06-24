@@ -6,39 +6,41 @@ import {
 } from "../reducer/gameReducer";
 import { Redirect } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { loadImage } from "../actions/actions";
 import gsap from "gsap";
 
 // images
 import lemonBall from "../assets/images/lemon.png";
-import crowd from "../assets/images/crowd.png";
 
 gsap.config({ nullTargetWarn: false });
 
 const GameStyles = styled.div`
-  background-color: #cf9970;
-  width: 100%;
-  position: relative;
-  min-height: 650px;
-  overflow: hidden;
   canvas {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  #texture {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* z-index: 5; */
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%);
+    opacity: 0.2;
+    pointer-events: none;
+  }
   #crowd-image {
     position: absolute;
     bottom: -1%;
     right: 0;
     width: 110%;
-  }
-  .game-loading {
-    position: absolute;
-    color: var(--off-white);
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    max-width: 475px;
+    pointer-events: none;
+    @media screen and (min-width: 1000px) {
+      max-width: 600px;
+    }
   }
   .game-container {
     position: absolute;
@@ -78,23 +80,13 @@ const GameStyles = styled.div`
       left: 50%;
       transform: translate(-50%, 0);
     }
-    .match-text {
-      position: absolute;
-      bottom: 30%;
-      left: 50%;
-      transform: translate(-50%, 0);
-      font-size: 87px;
-      color: var(--off-white);
-    }
   }
 `;
 
-export default function Game({ data, tries }) {
-  const [loading, setLoading] = React.useState(true);
+export default function Play({ data, tries }) {
   const [gameScore, setGameScore] = React.useState(0);
   const [counter, setCounter] = React.useState(3);
-  const [timer, setTimer] = React.useState(3);
-  const [hasTimedOut, setHasTimedOut] = React.useState(false);
+  const [timer, setTimer] = React.useState(60);
   const [cookies, setCookie] = useCookies(["tries"]);
   const dispatch = useGameDispatchContext();
   const { id, score, prize } = useGameStateContext();
@@ -137,35 +129,33 @@ export default function Game({ data, tries }) {
 
   React.useEffect(() => {
     if (timer === 0) {
-      setTimeout(() => {
-        setHasTimedOut(true);
-      }, 1000);
-
       dispatch({ type: "UPDATE_SCORE", score: gameScore });
 
       if (gameScore < bronze) {
         dispatch({ type: "UPDATE_PRIZE", prize: "none" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "none" });
       } else if (gameScore >= bronze && gameScore < silver) {
         dispatch({ type: "UPDATE_PRIZE", prize: "bronze" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "bronze" });
       } else if (gameScore >= silver && gameScore < gold) {
         dispatch({ type: "UPDATE_PRIZE", prize: "silver" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "silver" });
       } else if (gameScore >= gold) {
         dispatch({ type: "UPDATE_PRIZE", prize: "gold" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "gold" });
       }
     }
   }, [timer]);
 
-  // React.useEffect(() => {
-  //   if (prize === "none") {
-  //     alert("none");
-  //   } else if (prize === "bronze") {
-  //     alert("bronze");
-  //   } else if (prize === "bronx=ze") {
-  //     alert("silver");
-  //   }
-  // }, [prize]);
-
-  // animations
+  React.useEffect(() => {
+    gsap.fromTo(
+      "#crowd-image",
+      {
+        yPercent: 100,
+      },
+      { yPercent: 0 }
+    );
+  }, []);
 
   React.useEffect(() => {
     if (timer < 59) {
@@ -182,12 +172,32 @@ export default function Game({ data, tries }) {
         duration: 0.4,
         autoAlpha: 0,
       });
+
+      gsap.to(".score-counter", {
+        duration: 0.4,
+        autoAlpha: 0,
+      });
     }
   }, [timer]);
 
   React.useEffect(() => {
+    if (timer > 0) {
+      gsap.to("#pong", {
+        duration: 0.4,
+        autoAlpha: 1,
+      });
+    }
+  }, [timer]);
+
+  React.useEffect(() => {
+    let tl = gsap.timeline();
+
     if (timer === 0) {
-      gsap.from(".fade-in", {
+      tl.from(".fade-in", {
+        duration: 0.4,
+        autoAlpha: 0,
+      }).to(".fade-in", {
+        delay: 1,
         duration: 0.4,
         autoAlpha: 0,
       });
@@ -268,7 +278,7 @@ export default function Game({ data, tries }) {
     // draw text
     function drawText(text, x, y, color) {
       ctx.fillStyle = color;
-      ctx.font = "45px system";
+      ctx.font = "45px Canopee";
       ctx.fillText(text, x, y);
     }
 
@@ -278,10 +288,6 @@ export default function Game({ data, tries }) {
 
       // draw the net
       drawNet();
-
-      // draw the scores
-      // drawText(user.score, canvas.width / 2, canvas.height / 5, "white");
-      // drawText(com.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
 
       // draw paddles
       drawRect(user.x, user.y, user.width, user.height, user.color);
@@ -349,7 +355,6 @@ export default function Game({ data, tries }) {
       let player = ball.y < canvas.width / 2 ? com : user;
 
       if (collision(ball, player)) {
-        // ball.velocityY = -ball.velocityY;
         // calculate where the ball hit the player
         let collidePoint = ball.x - (player.x + player.width / 2);
 
@@ -396,68 +401,53 @@ export default function Game({ data, tries }) {
     }, 3000);
   }
 
-  React.useEffect(() => {
-    if (id && !loading) {
-      initialiseGame();
-      saveToCookies();
-    }
-  }, [loading]);
+  function startGame() {
+    initialiseGame();
+    saveToCookies();
+  }
 
   React.useEffect(() => {
-    loadImage(crowd).then(() => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    });
+    if (id) {
+      startGame();
+    }
   }, []);
 
   if (!id) {
     return <Redirect to="/" />;
   }
 
+  if (prize) {
+    return <Redirect to="/results" />;
+  }
+
   return (
     <>
       <GameStyles>
-        {loading ? (
-          <>
-            <h1 className="game-loading">Loading...</h1>
-          </>
-        ) : (
-          <>
-            <img src={lemonBall} alt="" id="ball" style={{ display: "none" }} />
-            <img src={crowd} alt="" id="crowd-image" />
+        <img src={lemonBall} alt="" id="ball" style={{ display: "none" }} />
 
-            {!hasTimedOut && (
-              <canvas
-                id="pong"
-                width={300}
-                height={400}
-                style={{ touchAction: "none" }}
-              />
-            )}
+        <canvas
+          id="pong"
+          width={300}
+          height={400}
+          style={{ touchAction: "none" }}
+        />
 
-            <div className="game-container">
-              {timer >= 58 && (
-                <h1 className="intro-counter fade-out">
-                  {counter > 0 ? counter : "PLAY!"}
-                </h1>
-              )}
-              {timer < 60 && (
-                <h1 className="score-counter">
-                  {timer > 0 ? gameScore : score}
-                </h1>
-              )}
-              <h1 className="timer">{timer}</h1>
-              {timer >= 58 && (
-                <p className="help-text fade-out">
-                  {data?.data?.data?.settings?.arrow_text}
-                </p>
-              )}
-
-              {timer === 0 && <h1 className="match-text fade-in">MATCH!</h1>}
-            </div>
-          </>
-        )}
+        <div className="game-container">
+          {timer >= 58 && (
+            <h1 className="intro-counter fade-out">
+              {counter > 0 ? counter : "PLAY!"}
+            </h1>
+          )}
+          {timer < 60 && (
+            <h1 className="score-counter">{timer > 0 ? gameScore : score}</h1>
+          )}
+          <h1 className="timer">{timer}</h1>
+          {timer >= 58 && (
+            <p className="help-text fade-out">
+              {data?.data?.data?.settings?.arrow_text}
+            </p>
+          )}
+        </div>
       </GameStyles>
     </>
   );

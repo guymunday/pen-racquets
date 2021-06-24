@@ -18,6 +18,7 @@ const global = css`
   h6 {
     font-family: "Canopee", serif;
     font-weight: 400;
+    line-height: 1;
   }
 
   a {
@@ -36,6 +37,12 @@ const global = css`
     padding: 10px 20px;
     display: inline-block;
     transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: inherit;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    cursor: pointer;
+    min-width: 200px;
     :hover {
       background: black;
       color: white;
@@ -54,6 +61,21 @@ const global = css`
     font-size: inherit;
     cursor: pointer;
     text-decoration: underline;
+  }
+
+  .loading-container {
+    text-align: center;
+    position: relative;
+    min-height: 650px;
+    overflow: hidden;
+    background-color: #ebd668;
+  }
+
+  .game-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 `;
 
