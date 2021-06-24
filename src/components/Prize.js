@@ -6,6 +6,7 @@ import {
   useGameDispatchContext,
 } from "../reducer/gameReducer";
 import gsap from "gsap";
+import { loadImage } from "../actions/actions";
 import AjaxButton from "./AjaxButton";
 import hole from "../assets/images/hole.svg";
 
@@ -54,6 +55,7 @@ const PrizeStyles = styled.div`
 `;
 
 export default function PrizeReveal({ data, tries }) {
+  const [loading, setLoading] = React.useState(true);
   const { prize, score, id } = useGameStateContext();
   const dispatch = useGameDispatchContext();
 
@@ -61,18 +63,32 @@ export default function PrizeReveal({ data, tries }) {
     "{total}",
     score
   );
-
   const silverBottomText = data?.data?.data?.result?.silver_text_bottom.replace(
     "{total}",
     score
   );
-
   const goldBottomText = data?.data?.data?.result?.gold_text_bottom.replace(
     "{total}",
     score
   );
-
   const terms = data?.data?.data?.index?.terms_text.replace("{tries}", tries);
+
+  const imagesToLoad = [
+    hole,
+    prize === "none"
+      ? data?.data?.data?.result?.lost_image?.url
+      : prize === "bronze"
+      ? data?.data?.data?.result?.bronze_image?.url
+      : prize === "silver"
+      ? data?.data?.data?.result?.silver_image?.url
+      : data?.data?.data?.result?.gold_image?.url,
+  ];
+
+  React.useEffect(() => {
+    Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
+      setLoading(false);
+    });
+  }, []);
 
   React.useEffect(() => {
     gsap.to(".prize-image", {
@@ -80,7 +96,7 @@ export default function PrizeReveal({ data, tries }) {
       duration: 0.8,
       yPercent: -190,
     });
-  }, [prize]);
+  }, [loading]);
 
   React.useEffect(() => {
     let tl = gsap.timeline();
@@ -121,7 +137,7 @@ export default function PrizeReveal({ data, tries }) {
           duration: 0.5,
         }
       );
-  });
+  }, [loading]);
 
   if (!id) {
     return <Redirect to="/" />;
@@ -129,126 +145,136 @@ export default function PrizeReveal({ data, tries }) {
 
   return (
     <>
-      <PrizeStyles>
-        {prize === "none" ? (
-          <>
-            <div className="prize-image-reveal">
-              <img
-                className="prize-image"
-                src={data?.data?.data?.result?.lost_image?.url}
-                alt=""
-              />
-              <img className="image-hole" src={hole} alt="" />
-            </div>
-            <h1 className="match-text">MATCH!</h1>
-            <div className="prize-details">
-              <h1>{data?.data?.data?.result?.lost_text}</h1>
-              <p>{data?.data?.data?.result?.lost_on_third_try_text} </p>
-              <Link
-                className="button"
-                to="/play"
-                onClick={() => dispatch({ type: "UPDATE_PRIZE", prize: false })}
-              >
-                {data?.data?.data?.result?.play_again}
-              </Link>
-              <p>
-                <a href="/" style={{ fontSize: 16 }}>
-                  {terms}
-                </a>
-              </p>
-            </div>
-          </>
-        ) : prize === "bronze" ? (
-          <>
-            <div className="prize-image-reveal">
-              <img
-                className="prize-image"
-                src={data?.data?.data?.result?.bronze_image?.url}
-                alt=""
-              />
-              <img className="image-hole" src={hole} alt="" />
-            </div>
-            <h1 className="match-text">MATCH!</h1>
-            <div className="prize-details">
-              <h1>{data?.data?.data?.result?.bronze_text}</h1>
-              <p>{bronzeBottomText}</p>
-              <AjaxButton />
-              <Link
-                className="button"
-                to="/play"
-                onClick={() => dispatch({ type: "UPDATE_PRIZE", prize: false })}
-              >
-                {data?.data?.data?.result?.play_again}
-              </Link>
-              <p>
-                <a href="/" style={{ fontSize: 16 }}>
-                  {terms}
-                </a>
-              </p>
-            </div>
-          </>
-        ) : prize === "silver" ? (
-          <>
-            <div className="prize-image-reveal">
-              <img
-                className="prize-image"
-                src={data?.data?.data?.result?.silver_image?.url}
-                alt=""
-              />
-              <img className="image-hole" src={hole} alt="" />
-            </div>
-            <h1 className="match-text">MATCH!</h1>
-            <div className="prize-details">
-              <h1>{data?.data?.data?.result?.silver_text}</h1>
-              <p>{silverBottomText}</p>
-              <AjaxButton />
-              <Link
-                className="button"
-                to="/play"
-                onClick={() => dispatch({ type: "UPDATE_PRIZE", prize: false })}
-              >
-                {data?.data?.data?.result?.play_again}
-              </Link>
-              <p>
-                <a href="/" style={{ fontSize: 16 }}>
-                  {terms}
-                </a>
-              </p>
-            </div>
-          </>
-        ) : prize === "gold" ? (
-          <>
-            <div className="prize-image-reveal">
-              <img
-                className="prize-image"
-                src={data?.data?.data?.result?.gold_image?.url}
-                alt=""
-              />
-              <img className="image-hole" src={hole} alt="" />
-            </div>
-            <h1 className="match-text">MATCH!</h1>
-            <div className="prize-details">
-              <h1>{data?.data?.data?.result?.gold_text}</h1>
-              <p>{goldBottomText}</p>
-              <AjaxButton />
-              <Link
-                className="button"
-                to="/play"
-                onClick={() => dispatch({ type: "UPDATE_PRIZE", prize: false })}
-              >
-                {data?.data?.data?.result?.play_again}
-              </Link>
-              <p>
-                <a href="/" style={{ fontSize: 16 }}>
-                  {terms}
-                </a>
-              </p>
-            </div>
-          </>
-        ) : (
-          <Redirect to="/" />
-        )}
-      </PrizeStyles>
+      {!loading && (
+        <PrizeStyles>
+          {prize === "none" ? (
+            <>
+              <div className="prize-image-reveal">
+                <img
+                  className="prize-image"
+                  src={data?.data?.data?.result?.lost_image?.url}
+                  alt=""
+                />
+                <img className="image-hole" src={hole} alt="" />
+              </div>
+              <h1 className="match-text">MATCH!</h1>
+              <div className="prize-details">
+                <h1>{data?.data?.data?.result?.lost_text}</h1>
+                <p>{data?.data?.data?.result?.lost_on_third_try_text} </p>
+                <Link
+                  className="button"
+                  to="/play"
+                  onClick={() =>
+                    dispatch({ type: "UPDATE_PRIZE", prize: false })
+                  }
+                >
+                  {data?.data?.data?.result?.play_again}
+                </Link>
+                <p>
+                  <a href="/" style={{ fontSize: 16 }}>
+                    {terms}
+                  </a>
+                </p>
+              </div>
+            </>
+          ) : prize === "bronze" ? (
+            <>
+              <div className="prize-image-reveal">
+                <img
+                  className="prize-image"
+                  src={data?.data?.data?.result?.bronze_image?.url}
+                  alt=""
+                />
+                <img className="image-hole" src={hole} alt="" />
+              </div>
+              <h1 className="match-text">MATCH!</h1>
+              <div className="prize-details">
+                <h1>{data?.data?.data?.result?.bronze_text}</h1>
+                <p>{bronzeBottomText}</p>
+                <AjaxButton />
+                <Link
+                  className="button"
+                  to="/play"
+                  onClick={() =>
+                    dispatch({ type: "UPDATE_PRIZE", prize: false })
+                  }
+                >
+                  {data?.data?.data?.result?.play_again}
+                </Link>
+                <p>
+                  <a href="/" style={{ fontSize: 16 }}>
+                    {terms}
+                  </a>
+                </p>
+              </div>
+            </>
+          ) : prize === "silver" ? (
+            <>
+              <div className="prize-image-reveal">
+                <img
+                  className="prize-image"
+                  src={data?.data?.data?.result?.silver_image?.url}
+                  alt=""
+                />
+                <img className="image-hole" src={hole} alt="" />
+              </div>
+              <h1 className="match-text">MATCH!</h1>
+              <div className="prize-details">
+                <h1>{data?.data?.data?.result?.silver_text}</h1>
+                <p>{silverBottomText}</p>
+                <AjaxButton />
+                <Link
+                  className="button"
+                  to="/play"
+                  onClick={() =>
+                    dispatch({ type: "UPDATE_PRIZE", prize: false })
+                  }
+                >
+                  {data?.data?.data?.result?.play_again}
+                </Link>
+                <p>
+                  <a href="/" style={{ fontSize: 16 }}>
+                    {terms}
+                  </a>
+                </p>
+              </div>
+            </>
+          ) : prize === "gold" ? (
+            <>
+              <div className="prize-image-reveal">
+                <img
+                  className="prize-image"
+                  src={data?.data?.data?.result?.gold_image?.url}
+                  alt=""
+                />
+                <img className="image-hole" src={hole} alt="" />
+              </div>
+              <h1 className="match-text">MATCH!</h1>
+              <div className="prize-details">
+                <h1>{data?.data?.data?.result?.gold_text}</h1>
+                <p>{goldBottomText}</p>
+                <AjaxButton />
+                <Link
+                  className="button"
+                  to="/play"
+                  onClick={() =>
+                    dispatch({ type: "UPDATE_PRIZE", prize: false })
+                  }
+                >
+                  {data?.data?.data?.result?.play_again}
+                </Link>
+                <p>
+                  <a href="/" style={{ fontSize: 16 }}>
+                    {terms}
+                  </a>
+                </p>
+              </div>
+            </>
+          ) : (
+            <Redirect to="/" />
+          )}
+        </PrizeStyles>
+      )}
     </>
   );
 }
