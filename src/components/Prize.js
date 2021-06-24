@@ -22,7 +22,7 @@ const PrizeStyles = styled.div`
     .prize-image {
       position: absolute;
       max-width: 170px;
-      bottom: -50%;
+      bottom: -100%;
       pointer-events: none;
     }
     .image-hole {
@@ -37,6 +37,7 @@ const PrizeStyles = styled.div`
     color: var(--off-white);
     text-align: center;
     margin: auto;
+    opacity: 0;
   }
   .prize-details {
     width: 100%;
@@ -77,7 +78,7 @@ export default function PrizeReveal({ data, tries }) {
     gsap.to(".prize-image", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -40,
+      yPercent: -90,
     });
   }, [prize]);
 
