@@ -75,6 +75,7 @@ export default function PrizeReveal({ data, tries }) {
 
   React.useEffect(() => {
     gsap.to(".prize-image", {
+      delay: 0.2,
       duration: 0.8,
       yPercent: -40,
     });

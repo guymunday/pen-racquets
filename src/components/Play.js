@@ -56,7 +56,7 @@ const GameStyles = styled.div`
       right: 20px;
       background: black;
       color: var(--off-white);
-      padding: 0 10px;
+      padding: 10px;
     }
     .intro-counter {
       position: absolute;
@@ -79,6 +79,7 @@ const GameStyles = styled.div`
       bottom: 30%;
       left: 50%;
       transform: translate(-50%, 0);
+      max-width: 300px;
     }
   }
 `;
@@ -238,7 +239,7 @@ export default function Play({ data, tries }) {
       speed: 5,
       velocityX: 5,
       velocityY: 5,
-      coilor: "#E5E0CE",
+      color: "#E5E0CE",
     };
 
     // create the net
@@ -276,11 +277,11 @@ export default function Play({ data, tries }) {
     }
 
     // draw text
-    function drawText(text, x, y, color) {
-      ctx.fillStyle = color;
-      ctx.font = "45px Canopee";
-      ctx.fillText(text, x, y);
-    }
+    // function drawText(text, x, y, color) {
+    //   ctx.fillStyle = color;
+    //   ctx.font = "45px Canopee";
+    //   ctx.fillText(text, x, y);
+    // }
 
     function renderGame() {
       // clear the canvas first
@@ -331,12 +332,13 @@ export default function Play({ data, tries }) {
 
     // reset ball
     function resetBall() {
-      ball.speed = 5;
-
       ball.x = canvas.width / 2;
       ball.y = canvas.height / 2;
 
-      ball.velocityY = -ball.velocityY;
+      ball.velocityX = 5;
+      ball.velocityY = 5;
+
+      ball.speed = 5;
     }
 
     // update / logic
@@ -382,6 +384,7 @@ export default function Play({ data, tries }) {
       } else if (ball.y + ball.radius > canvas.height) {
         com.score++;
         resetBall();
+        ball.velocityX = -ball.velocityX;
       }
     }
 
