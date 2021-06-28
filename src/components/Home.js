@@ -114,6 +114,10 @@ export default function Home({ data, tries, apiUrl }) {
     });
   }, []);
 
+  const handleAudio = () => {
+    dispatch({ type: "UPDATE_AUDIO", audio: 1 });
+  };
+
   return (
     <>
       <KeenRedirect />
@@ -136,7 +140,11 @@ export default function Home({ data, tries, apiUrl }) {
             <div className="home-inner">
               <p>{index?.small_title}</p>
               <h1>{index?.big_title}</h1>
-              <Link to="/play" className="button home-button">
+              <Link
+                to="/play"
+                className="button home-button"
+                onClick={handleAudio}
+              >
                 {index?.button_text}
               </Link>
               <p>{index?.text}</p>

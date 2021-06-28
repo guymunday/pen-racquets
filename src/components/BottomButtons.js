@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
+import music from "../assets/music.m4a";
+import {
+  useGameDispatchContext,
+  useGameStateContext,
+} from "../reducer/gameReducer";
 
 const Styles = styled.div`
   display: flex;
@@ -17,7 +22,33 @@ const Styles = styled.div`
 `;
 
 export default function BottomButtons({ ...rest }) {
+  const audioRef = React.useRef(null);
+  const [audioPlaying, setAudioPlaying] = React.useState(false);
   const location = useLocation();
+  const { audio } = useGameStateContext();
+  const dispatch = useGameDispatchContext();
+
+  const handleAudio = () => {
+    if (!audio) {
+      audioRef.current.play();
+      dispatch({ type: "UPDATE_AUDIO", audio: 1 });
+    } else {
+      audioRef.current.pause();
+      dispatch({ type: "UPDATE_AUDIO", audio: null });
+    }
+    setAudioPlaying(!audioPlaying);
+  };
+
+  React.useEffect(() => {
+    if (audio) {
+      audioRef.current.play();
+      setAudioPlaying(true);
+    } else {
+      audioRef.current.pause();
+      setAudioPlaying(false);
+    }
+  }, [audio]);
+
   return (
     <>
       <Styles
@@ -34,9 +65,13 @@ export default function BottomButtons({ ...rest }) {
           style={{
             color: location.pathname === "/play" ? "var(--off-white)" : "black",
           }}
+          onClick={handleAudio}
         >
-          Music
+          Music {audioPlaying ? "Off" : "On"}
         </button>
+        <audio ref={audioRef} loop>
+          <source src={music} />
+        </audio>
         <a
           href="/"
           className="button-alt tc-button"

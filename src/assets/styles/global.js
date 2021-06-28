@@ -32,6 +32,10 @@ const global = css`
     width: 100%;
   }
 
+  button:focus {
+    outline: none;
+  }
+
   .button {
     border: 1px solid black;
     padding: 8px 20px;
