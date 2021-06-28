@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import music from "../assets/music.m4a";
+import music from "../assets/music.mp3";
 import {
   useGameDispatchContext,
   useGameStateContext,
