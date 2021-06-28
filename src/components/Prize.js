@@ -2,7 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Link, Redirect } from "react-router-dom";
-import { useGameStateContext } from "../reducer/gameReducer";
+import {
+  useGameStateContext,
+  useGameDispatchContext,
+} from "../reducer/gameReducer";
 import { gsap } from "gsap";
 import { loadImage } from "../actions/actions";
 import AjaxButton from "./AjaxButton";
@@ -32,7 +35,7 @@ const PrizeStyles = styled.div`
       pointer-events: none;
     }
     .prize-image-bottle {
-      max-width: 140px;
+      max-width: 120px !important;
     }
     .image-hole {
       max-width: 280px;
@@ -66,8 +69,9 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
   const [formSubmitted, setFormSubmitted] = React.useState(false);
   const [leaderboardData, setLeaderboardData] = React.useState({});
   const [loading, setLoading] = React.useState(true);
-  const { score, id, previous } = useGameStateContext();
+  const { score, id, previous, submitted } = useGameStateContext();
   const [showLeaderboardForm, setShowLeaderboardForm] = React.useState(false);
+  const dispatch = useGameDispatchContext();
 
   const bronzeBottomText = data?.data?.data?.result?.bronze_text_bottom.replace(
     "{total}",
@@ -133,7 +137,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
     if (leaderboardData?.data?.data[6]?.point < score) {
       setShowLeaderboardForm(true);
     }
-  }, []);
+  }, [leaderboardData]);
 
   React.useEffect(() => {
     gsap.to(".prize-image", {
@@ -146,7 +150,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
     gsap.to(".prize-image-bottle", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -195,
+      yPercent: -185,
       rotate: 6,
     });
   }, [loading]);
@@ -205,6 +209,10 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
       );
   }, [loading]);
 
+  function handleLeaderboardClick() {
+    dispatch({ type: "UPDATE_SUBMITTED", submitted: 1 });
+  }
+
   if (!id) {
     return <Redirect to="/" />;
   }
@@ -236,6 +244,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
+                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -268,6 +277,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
+                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -300,6 +310,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
+                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -332,6 +343,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
+                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -346,7 +358,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
             <Redirect to="/" />
           )}
           <BottomButtons className="prize-reveal" />
-          {showLeaderboardForm && <LeaderboardForm />}
+          {showLeaderboardForm && submitted !== 1 && <LeaderboardForm />}
           {formSubmitted && <AddedToCart data={data} terms={terms} />}
         </PrizeStyles>
       )}

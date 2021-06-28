@@ -38,6 +38,12 @@ const gameReducer = (state, action) => {
         open: action.open,
       };
     }
+    case "UPDATE_SUBMITTED": {
+      return {
+        ...state,
+        submitted: action.submitted,
+      };
+    }
     case "UPDATE_AUDIO": {
       return {
         ...state,

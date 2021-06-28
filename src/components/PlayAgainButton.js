@@ -18,6 +18,7 @@ export default function PlayAgainButton({ children }) {
 
   function handleClick() {
     dispatch({ type: "UPDATE_PRIZE", prize: false });
+    dispatch({ type: "UPDATE_SUBMITTED", submitted: 0 });
   }
 
   return (
