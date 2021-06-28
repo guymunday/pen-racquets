@@ -127,7 +127,7 @@ const GameStyles = styled.div`
 export default function Play({ data, tries, apiUrl }) {
   const [gameScore, setGameScore] = React.useState(0);
   const [counter, setCounter] = React.useState(3);
-  const [timer, setTimer] = React.useState(1);
+  const [timer, setTimer] = React.useState(60);
   const [cookies, setCookie] = useCookies(["tries"]);
   const dispatch = useGameDispatchContext();
   const { score, prize } = useGameStateContext();
