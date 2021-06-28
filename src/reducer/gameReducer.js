@@ -32,10 +32,22 @@ const gameReducer = (state, action) => {
         previous: action.previous,
       };
     }
+    case "UPDATE_GAME_OPEN": {
+      return {
+        ...state,
+        open: action.open,
+      };
+    }
     case "UPDATE_AUDIO": {
       return {
         ...state,
         audio: action.audio,
+      };
+    }
+    case "UPDATE_URL": {
+      return {
+        ...state,
+        url: action.url,
       };
     }
     default: {

@@ -1,14 +1,17 @@
-import * as React from "react";
-// import axios from "axios";
+import React from "react";
 import { useGameStateContext } from "../reducer/gameReducer";
 
 export default function AjaxButton({ setFormSubmitted, ...rest }) {
   const formRef = React.useRef(null);
-  const { id, score, prize } = useGameStateContext();
+  const { score, prize } = useGameStateContext();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // setFormSubmitted(true);
+    setFormSubmitted(true);
+
+    setTimeout(() => {
+      formRef.current.submit();
+    }, 2000);
   };
 
   return (

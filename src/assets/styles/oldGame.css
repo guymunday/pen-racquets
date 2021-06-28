@@ -558,7 +558,7 @@ form:not(#filterForm) label:not(.not-apply) {
 input.custom-input {
   color: #555;
 }
-span.input,
+/* span.input,
 input[type="email"],
 input[type="number"],
 input[type="password"],
@@ -602,7 +602,7 @@ input {
   box-sizing: inherit;
   padding-left: 12px;
   padding-right: 14%;
-}
+} */
 #login-registro-previo-form .d-flex button,
 #ciam_login_form .d-flex button {
   height: 46px;

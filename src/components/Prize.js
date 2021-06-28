@@ -1,14 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import axios from "axios";
 import { Link, Redirect } from "react-router-dom";
-import {
-  useGameStateContext,
-  useGameDispatchContext,
-} from "../reducer/gameReducer";
-import gsap from "gsap";
+import { useGameStateContext } from "../reducer/gameReducer";
+import { gsap } from "gsap";
 import { loadImage } from "../actions/actions";
 import AjaxButton from "./AjaxButton";
+import PlayAgainButton from "./PlayAgainButton";
 import hole from "../assets/images/hole.svg";
+import BottomButtons from "./BottomButtons";
+import LeaderboardForm from "./LeaderboardForm";
+import KeenRedirect from "./KeenRedirect";
+import ClosedRedirect from "./ClosedRedirect";
+import AddedToCart from "./AddedToCart";
 
 const PrizeStyles = styled.div`
   .prize-image-reveal {
@@ -20,11 +24,15 @@ const PrizeStyles = styled.div`
     align-items: flex-end;
     height: 100%;
     overflow: hidden;
-    .prize-image {
+    .prize-image,
+    .prize-image-bottle {
       position: absolute;
       max-width: 170px;
       bottom: -200%;
       pointer-events: none;
+    }
+    .prize-image-bottle {
+      max-width: 140px;
     }
     .image-hole {
       max-width: 280px;
@@ -54,10 +62,12 @@ const PrizeStyles = styled.div`
   }
 `;
 
-export default function PrizeReveal({ data, tries }) {
+export default function PrizeReveal({ data, tries, apiUrl }) {
+  const [formSubmitted, setFormSubmitted] = React.useState(false);
+  const [leaderboardData, setLeaderboardData] = React.useState({});
   const [loading, setLoading] = React.useState(true);
-  const { prize, score, id } = useGameStateContext();
-  const dispatch = useGameDispatchContext();
+  const { score, id, previous } = useGameStateContext();
+  const [showLeaderboardForm, setShowLeaderboardForm] = React.useState(false);
 
   const bronzeBottomText = data?.data?.data?.result?.bronze_text_bottom.replace(
     "{total}",
@@ -75,11 +85,11 @@ export default function PrizeReveal({ data, tries }) {
 
   const imagesToLoad = [
     hole,
-    prize === "none"
+    previous === "none"
       ? data?.data?.data?.result?.lost_image?.url
-      : prize === "bronze"
+      : previous === "bronze"
       ? data?.data?.data?.result?.bronze_image?.url
-      : prize === "silver"
+      : previous === "silver"
       ? data?.data?.data?.result?.silver_image?.url
       : data?.data?.data?.result?.gold_image?.url,
   ];
@@ -91,10 +101,53 @@ export default function PrizeReveal({ data, tries }) {
   }, []);
 
   React.useEffect(() => {
+    axios
+      .post(`${apiUrl}/api/v1/end`, {
+        id,
+        point: score,
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  React.useEffect(() => {
+    axios
+      .get(`${apiUrl}/api/v1/leaderboard`)
+      .then((res) => {
+        setLeaderboardData(res);
+        setLoading(false);
+      })
+      .catch((error) =>
+        console.log(
+          "Oh no! There has been an error fetching the leaderboard!",
+          error
+        )
+      );
+  }, []);
+
+  React.useEffect(() => {
+    if (leaderboardData?.data?.data.length < 7) {
+      setShowLeaderboardForm(true);
+    }
+    if (leaderboardData?.data?.data[6]?.point < score) {
+      setShowLeaderboardForm(true);
+    }
+  }, []);
+
+  React.useEffect(() => {
     gsap.to(".prize-image", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -190,
+      yPercent: -185,
+      rotate: -3,
+    });
+
+    gsap.to(".prize-image-bottle", {
+      delay: 0.2,
+      duration: 0.8,
+      yPercent: -195,
+      rotate: 6,
     });
   }, [loading]);
 
@@ -136,6 +189,19 @@ export default function PrizeReveal({ data, tries }) {
           display: "block",
           duration: 0.5,
         }
+      )
+      .fromTo(
+        ".prize-reveal",
+        {
+          opacity: 0,
+          display: "none",
+        },
+        {
+          opacity: 1,
+          display: "block",
+          duration: 0.5,
+        },
+        "<"
       );
   }, [loading]);
 
@@ -145,9 +211,11 @@ export default function PrizeReveal({ data, tries }) {
 
   return (
     <>
+      <KeenRedirect />
+      <ClosedRedirect />
       {!loading && (
         <PrizeStyles>
-          {prize === "none" ? (
+          {previous === "none" ? (
             <>
               <div className="prize-image-reveal">
                 <img
@@ -161,14 +229,15 @@ export default function PrizeReveal({ data, tries }) {
               <div className="prize-details">
                 <h1>{data?.data?.data?.result?.lost_text}</h1>
                 <p>{data?.data?.data?.result?.lost_on_third_try_text} </p>
-                <Link
-                  className="button"
-                  to="/play"
-                  onClick={() =>
-                    dispatch({ type: "UPDATE_PRIZE", prize: false })
-                  }
-                >
+                <PlayAgainButton>
                   {data?.data?.data?.result?.play_again}
+                </PlayAgainButton>
+                <Link
+                  to="/leaderboard"
+                  className="button-alt"
+                  style={{ display: "block" }}
+                >
+                  Go to leaderboard
                 </Link>
                 <p>
                   <a href="/" style={{ fontSize: 16 }}>
@@ -177,11 +246,11 @@ export default function PrizeReveal({ data, tries }) {
                 </p>
               </div>
             </>
-          ) : prize === "bronze" ? (
+          ) : previous === "bronze" ? (
             <>
               <div className="prize-image-reveal">
                 <img
-                  className="prize-image"
+                  className="prize-image-bottle"
                   src={data?.data?.data?.result?.bronze_image?.url}
                   alt=""
                 />
@@ -191,15 +260,16 @@ export default function PrizeReveal({ data, tries }) {
               <div className="prize-details">
                 <h1>{data?.data?.data?.result?.bronze_text}</h1>
                 <p>{bronzeBottomText}</p>
-                <AjaxButton />
-                <Link
-                  className="button"
-                  to="/play"
-                  onClick={() =>
-                    dispatch({ type: "UPDATE_PRIZE", prize: false })
-                  }
-                >
+                <AjaxButton setFormSubmitted={setFormSubmitted} />
+                <PlayAgainButton>
                   {data?.data?.data?.result?.play_again}
+                </PlayAgainButton>
+                <Link
+                  to="/leaderboard"
+                  className="button-alt"
+                  style={{ display: "block" }}
+                >
+                  Go to leaderboard
                 </Link>
                 <p>
                   <a href="/" style={{ fontSize: 16 }}>
@@ -208,11 +278,11 @@ export default function PrizeReveal({ data, tries }) {
                 </p>
               </div>
             </>
-          ) : prize === "silver" ? (
+          ) : previous === "silver" ? (
             <>
               <div className="prize-image-reveal">
                 <img
-                  className="prize-image"
+                  className="prize-image-bottle"
                   src={data?.data?.data?.result?.silver_image?.url}
                   alt=""
                 />
@@ -222,15 +292,16 @@ export default function PrizeReveal({ data, tries }) {
               <div className="prize-details">
                 <h1>{data?.data?.data?.result?.silver_text}</h1>
                 <p>{silverBottomText}</p>
-                <AjaxButton />
-                <Link
-                  className="button"
-                  to="/play"
-                  onClick={() =>
-                    dispatch({ type: "UPDATE_PRIZE", prize: false })
-                  }
-                >
+                <AjaxButton setFormSubmitted={setFormSubmitted} />
+                <PlayAgainButton>
                   {data?.data?.data?.result?.play_again}
+                </PlayAgainButton>
+                <Link
+                  to="/leaderboard"
+                  className="button-alt"
+                  style={{ display: "block" }}
+                >
+                  Go to leaderboard
                 </Link>
                 <p>
                   <a href="/" style={{ fontSize: 16 }}>
@@ -239,11 +310,11 @@ export default function PrizeReveal({ data, tries }) {
                 </p>
               </div>
             </>
-          ) : prize === "gold" ? (
+          ) : previous === "gold" ? (
             <>
               <div className="prize-image-reveal">
                 <img
-                  className="prize-image"
+                  className="prize-image-bottle"
                   src={data?.data?.data?.result?.gold_image?.url}
                   alt=""
                 />
@@ -253,15 +324,16 @@ export default function PrizeReveal({ data, tries }) {
               <div className="prize-details">
                 <h1>{data?.data?.data?.result?.gold_text}</h1>
                 <p>{goldBottomText}</p>
-                <AjaxButton />
-                <Link
-                  className="button"
-                  to="/play"
-                  onClick={() =>
-                    dispatch({ type: "UPDATE_PRIZE", prize: false })
-                  }
-                >
+                <AjaxButton setFormSubmitted={setFormSubmitted} />
+                <PlayAgainButton>
                   {data?.data?.data?.result?.play_again}
+                </PlayAgainButton>
+                <Link
+                  to="/leaderboard"
+                  className="button-alt"
+                  style={{ display: "block" }}
+                >
+                  Go to leaderboard
                 </Link>
                 <p>
                   <a href="/" style={{ fontSize: 16 }}>
@@ -273,6 +345,9 @@ export default function PrizeReveal({ data, tries }) {
           ) : (
             <Redirect to="/" />
           )}
+          <BottomButtons className="prize-reveal" />
+          {showLeaderboardForm && <LeaderboardForm />}
+          {formSubmitted && <AddedToCart data={data} terms={terms} />}
         </PrizeStyles>
       )}
     </>

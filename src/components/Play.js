@@ -7,9 +7,13 @@ import {
 import { Redirect } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import gsap from "gsap";
+import axios from "axios";
+import KeenRedirect from "./KeenRedirect";
+import ClosedRedirect from "./ClosedRedirect";
 
 // images
 import lemonBall from "../assets/images/lemon.png";
+import BottomButtons from "./BottomButtons";
 
 gsap.config({ nullTargetWarn: false });
 
@@ -57,6 +61,32 @@ const GameStyles = styled.div`
       background: black;
       color: var(--off-white);
       padding: 10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      z-index: 2;
+      @media screen and (max-width: 500px) {
+        left: 50%;
+        bottom: 10px;
+        transform: translate(-50%, 0);
+        width: 70px;
+        height: 70px;
+      }
+    }
+    .timer-banner {
+      display: none;
+      @media screen and (max-width: 500px) {
+        display: block;
+        position: absolute;
+        bottom: 25px;
+        height: 40px;
+        background: black;
+        right: 10px;
+        left: 10px;
+      }
     }
     .intro-counter {
       position: absolute;
@@ -81,16 +111,26 @@ const GameStyles = styled.div`
       transform: translate(-50%, 0);
       max-width: 300px;
     }
+    .arrows {
+      position: absolute;
+      bottom: 17.2%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      width: 300px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 30px;
+    }
   }
 `;
 
-export default function Play({ data, tries }) {
+export default function Play({ data, tries, apiUrl }) {
   const [gameScore, setGameScore] = React.useState(0);
   const [counter, setCounter] = React.useState(3);
-  const [timer, setTimer] = React.useState(60);
+  const [timer, setTimer] = React.useState(1);
   const [cookies, setCookie] = useCookies(["tries"]);
   const dispatch = useGameDispatchContext();
-  const { id, score, prize } = useGameStateContext();
+  const { score, prize } = useGameStateContext();
 
   const bronze = data?.data?.data?.settings?.point_bronze;
   const silver = data?.data?.data?.settings?.point_silver;
@@ -104,7 +144,7 @@ export default function Play({ data, tries }) {
     tomorrow.setMilliseconds(0);
 
     if (!cookies.tries) {
-      setCookie("tries", `${tries}`, { path: "/", expires: tomorrow });
+      setCookie("tries", `${tries - 1}`, { path: "/", expires: tomorrow });
     } else {
       let attempts = parseInt(cookies.tries) - 1;
       setCookie("tries", attempts.toString(), {
@@ -347,7 +387,7 @@ export default function Play({ data, tries }) {
       ball.y += ball.velocityY;
 
       // simple AI to control the computer
-      let computerLevel = 0.03;
+      let computerLevel = 0.04;
       com.x += (ball.x - (com.x + com.width / 2)) * computerLevel;
 
       if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
@@ -374,17 +414,18 @@ export default function Play({ data, tries }) {
         ball.velocityY = direction * ball.speed * Math.cos(angleRad);
 
         // everytime the ball hits, increase the speed
-        ball.speed += 0.8;
+        ball.speed += 0.9;
       }
       // update the score
       if (ball.y - ball.radius < 0) {
         user.score++;
         setGameScore(user.score);
         resetBall();
+        ball.velocityY = -5;
       } else if (ball.y + ball.radius > canvas.height) {
         com.score++;
         resetBall();
-        ball.velocityX = -ball.velocityX;
+        ball.velocityX = -5;
       }
     }
 
@@ -410,14 +451,20 @@ export default function Play({ data, tries }) {
   }
 
   React.useEffect(() => {
-    if (id) {
-      startGame();
-    }
+    axios
+      .post(`${apiUrl}/api/v1/start`, {
+        try: 3,
+      })
+      .then((res) => {
+        dispatch({
+          type: "UPDATE_ID",
+          id: res.data.data.id,
+        });
+        startGame();
+        console.log(res, "good to go");
+      })
+      .catch((error) => console.log(error));
   }, []);
-
-  if (!id) {
-    return <Redirect to="/" />;
-  }
 
   if (prize) {
     return <Redirect to="/results" />;
@@ -425,6 +472,8 @@ export default function Play({ data, tries }) {
 
   return (
     <>
+      <KeenRedirect />
+      <ClosedRedirect />
       <GameStyles>
         <img src={lemonBall} alt="" id="ball" style={{ display: "none" }} />
 
@@ -448,13 +497,23 @@ export default function Play({ data, tries }) {
           {timer < 60 && (
             <h1 className="score-counter">{timer > 0 ? gameScore : score}</h1>
           )}
-          <h1 className="timer">{timer}</h1>
+          <h1 className="timer">
+            <span>{timer}</span>
+          </h1>
+          <div className="timer-banner" />
           {timer >= 58 && (
-            <p className="help-text fade-out">
-              {data?.data?.data?.settings?.arrow_text}
-            </p>
+            <>
+              <p className="help-text fade-out">
+                {data?.data?.data?.settings?.arrow_text}
+              </p>
+              <div className="arrows fade-out">
+                <span>←</span>
+                <span>→</span>
+              </div>
+            </>
           )}
         </div>
+        <BottomButtons />
       </GameStyles>
     </>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { loadImage } from "../actions/actions";
-
+import { useLocation } from "react-router-dom";
 import crowd from "../assets/images/crowd.png";
 import texture from "../assets/images/texture.png";
 
@@ -39,6 +39,7 @@ const GameLayoutStyles = styled.div`
 
 export default function GameLayout({ children }) {
   const [loading, setLoading] = React.useState(true);
+  const location = useLocation();
 
   React.useEffect(() => {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
@@ -52,7 +53,11 @@ export default function GameLayout({ children }) {
         {!loading && (
           <>
             <img src={texture} alt="" id="texture" />
-            <img src={crowd} alt="" id="crowd-image" />
+            {location.pathname !== "/leaderboard" &&
+              location.pathname !== "/keen" &&
+              location.pathname !== "/closed" && (
+                <img src={crowd} alt="" id="crowd-image" />
+              )}
             {children}
           </>
         )}

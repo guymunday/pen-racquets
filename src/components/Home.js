@@ -2,17 +2,17 @@ import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import {
-  useGameStateContext,
-  useGameDispatchContext,
-} from "../reducer/gameReducer";
+import { useGameDispatchContext } from "../reducer/gameReducer";
 import { loadImage } from "../actions/actions";
+import BottomButtons from "./BottomButtons";
 
 // images
 import lemonBall from "../assets/images/lemon-ball.png";
 import tennisPlayer from "../assets/images/tennis-player.png";
 import umpire from "../assets/images/umpire.png";
 import background from "../assets/images/home-background.png";
+import KeenRedirect from "./KeenRedirect";
+import ClosedRedirect from "./ClosedRedirect";
 
 const imagesToLoad = [lemonBall, tennisPlayer, umpire, background];
 
@@ -89,8 +89,6 @@ const HomeStyles = styled.div`
 export default function Home({ data, tries, apiUrl }) {
   const [loading, setLoading] = React.useState(true);
   const dispatch = useGameDispatchContext();
-  const { id } = useGameStateContext();
-
   const index = data?.data?.data?.index;
   const terms = index?.terms_text.replace("{tries}", tries);
 
@@ -112,19 +110,20 @@ export default function Home({ data, tries, apiUrl }) {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
       setTimeout(() => {
         setLoading(false);
-      }, 500);
+      }, 200);
     });
   }, []);
 
   return (
     <>
+      <KeenRedirect />
+      <ClosedRedirect />
       <HomeStyles>
         {loading ? (
           <h1 className="game-loading">Loading...</h1>
         ) : (
           <>
             <img src={background} alt="" className="home-background home-img" />
-
             <div className="home-image-container">
               <img src={lemonBall} alt="" className="home-ball-img home-img" />
               <img
@@ -134,7 +133,6 @@ export default function Home({ data, tries, apiUrl }) {
               />
               <img src={umpire} alt="" className="home-umpire-img home-img" />
             </div>
-
             <div className="home-inner">
               <p>{index?.small_title}</p>
               <h1>{index?.big_title}</h1>
@@ -142,15 +140,20 @@ export default function Home({ data, tries, apiUrl }) {
                 {index?.button_text}
               </Link>
               <p>{index?.text}</p>
-              <button style={{ marginTop: 20 }} className="button-alt">
-                See the leaderboard
-              </button>
+              <Link
+                to="/leaderboard"
+                style={{ marginTop: 20 }}
+                className="button-alt"
+              >
+                Go to leaderboard
+              </Link>
               <p style={{ marginTop: 20 }}>
                 <a href="/" style={{ fontSize: 16 }}>
                   {terms}
                 </a>
               </p>
             </div>
+            <BottomButtons />
           </>
         )}
       </HomeStyles>

@@ -34,7 +34,7 @@ const global = css`
 
   .button {
     border: 1px solid black;
-    padding: 10px 20px;
+    padding: 8px 20px;
     display: inline-block;
     transition: all 0.3s ease;
     font-family: inherit;
@@ -42,7 +42,9 @@ const global = css`
     background: rgba(255, 255, 255, 0.2);
     outline: none;
     cursor: pointer;
-    min-width: 200px;
+    min-width: 250px;
+    text-align: center;
+    text-transform: uppercase;
     :hover {
       background: black;
       color: white;
@@ -76,6 +78,33 @@ const global = css`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  input[type="text"] {
+    background: transparent;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 1rem;
+    :focus {
+      background: transparent;
+    }
+    ::placeholder {
+      color: inherit;
+      margin: auto;
+      padding: 0;
+      text-align: center;
+      font-size: 1rem;
+    }
+  }
+
+  .cart-image {
+    max-width: 120px !important;
+    margin: 20px auto !important;
   }
 `;
 
