@@ -75,7 +75,11 @@ export default function Leaderboard({ mainData, tries, apiUrl }) {
                 );
               })}
             </div>
-
+            {cookies.tries === undefined && (
+              <Link className="button" to="/">
+                {mainData?.data?.data?.leaderboard?.button_text}
+              </Link>
+            )}
             {!previous ? (
               <>
                 {parseInt(cookies.tries) > 0 && (
