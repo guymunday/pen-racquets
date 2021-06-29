@@ -10,10 +10,11 @@ import gsap from "gsap";
 import axios from "axios";
 import KeenRedirect from "./KeenRedirect";
 import ClosedRedirect from "./ClosedRedirect";
+import BottomButtons from "./BottomButtons";
 
 // images
 import lemonBall from "../assets/images/lemon.png";
-import BottomButtons from "./BottomButtons";
+import timerArch from "../assets/images/timer.png";
 
 gsap.config({ nullTargetWarn: false });
 
@@ -54,9 +55,22 @@ const GameStyles = styled.div`
     height: 100%;
     text-align: center;
     pointer-events: none;
+    .timer-arch {
+      position: absolute;
+      bottom: 70px;
+      right: 20px;
+      display: block;
+      width: 80px;
+      @media screen and (max-width: 500px) {
+        left: 50%;
+        bottom: 68px;
+        transform: translate(-50%, 0);
+        width: 70px;
+      }
+    }
     .timer {
       position: absolute;
-      bottom: 20px;
+      bottom: 0px;
       right: 20px;
       background: black;
       color: var(--off-white);
@@ -497,6 +511,7 @@ export default function Play({ data, tries, apiUrl }) {
           {timer < 60 && (
             <h1 className="score-counter">{timer > 0 ? gameScore : score}</h1>
           )}
+          <img className="timer-arch" src={timerArch} alt="" />
           <h1 className="timer">
             <span>{timer}</span>
           </h1>
