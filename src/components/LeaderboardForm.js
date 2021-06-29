@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
-import {
-  useGameStateContext,
-} from "../reducer/gameReducer";
+import { useGameStateContext } from "../reducer/gameReducer";
 import Popup from "./Popup";
+import { badWords } from "../assets/bad-words";
 import tennisPlayer from "../assets/images/tennis-player.png";
+import { indexOf } from "lodash";
 
 const StyledLeaderboardForm = styled.div`
   position: relative;
@@ -23,11 +23,13 @@ const StyledLeaderboardForm = styled.div`
 
 export default function LeaderboardForm() {
   const [formSubmitted, setFormSubmitted] = React.useState(false);
+  const [formBlocked, setFormBlocked] = React.useState("Enter your initials");
   const [initial, setInitial] = React.useState("");
   const { id, url, score } = useGameStateContext();
 
   function handleSubmit(e) {
     e.preventDefault();
+
     axios
       .post(`${url}/api/v1/leaderboard`, {
         id,
@@ -39,6 +41,16 @@ export default function LeaderboardForm() {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  function handleOnChange(e) {
+    if (badWords.indexOf(e.target.value) > -1) {
+      setInitial("");
+      setFormBlocked("No bad language!");
+    } else {
+      setInitial(e.target.value);
+      setFormBlocked("Enter your initials");
+    }
   }
 
   function handleReturnButton() {
@@ -66,9 +78,10 @@ export default function LeaderboardForm() {
                 minLength="1"
                 value={initial}
                 name="initials"
-                onChange={(e) => setInitial(e.target.value)}
-                placeholder="Enter your initials"
+                onChange={handleOnChange}
+                placeholder={formBlocked}
               />
+
               <button
                 className="button"
                 type="submit"
