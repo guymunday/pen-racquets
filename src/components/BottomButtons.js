@@ -73,7 +73,7 @@ export default function BottomButtons({ ...rest }) {
           <source src={music} />
         </audio>
         <a
-          href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+          href="https://www.penhaligons.com/uk/en/game-official-regulation"
           className="button-alt tc-button"
           style={{
             color: location.pathname === "/play" ? "var(--off-white)" : "black",

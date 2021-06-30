@@ -138,7 +138,9 @@ export default function Home({ data, tries, apiUrl }) {
               <img src={umpire} alt="" className="home-umpire-img home-img" />
             </div>
             <div className="home-inner">
-              <p>{index?.small_title}</p>
+              <p style={{ fontWeight: 700, fontSize: 26 }}>
+                {index?.small_title}
+              </p>
               <h1>{index?.big_title}</h1>
               <Link
                 to="/play"
