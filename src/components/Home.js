@@ -159,7 +159,7 @@ export default function Home({ data, tries, apiUrl }) {
               </Link>
               <p style={{ marginTop: 20 }}>
                 <a
-                  href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                  href="https://www.penhaligons.com/uk/en/game-official-regulation"
                   style={{ fontSize: 16 }}
                 >
                   {terms}
