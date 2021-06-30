@@ -97,7 +97,10 @@ export default function Leaderboard({ mainData, tries, apiUrl }) {
               {previous ? "Play Again" : "PLAY"}
             </PlayAgainButton>
             <p>
-              <a href="/" style={{ fontSize: 16 }}>
+              <a
+                href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                style={{ fontSize: 16 }}
+              >
                 {terms}
               </a>
             </p>

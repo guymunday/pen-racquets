@@ -249,7 +249,10 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   Go to leaderboard
                 </Link>
                 <p>
-                  <a href="/" style={{ fontSize: 16 }}>
+                  <a
+                    href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                    style={{ fontSize: 16 }}
+                  >
                     {terms}
                   </a>
                 </p>
@@ -282,7 +285,10 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   Go to leaderboard
                 </Link>
                 <p>
-                  <a href="/" style={{ fontSize: 16 }}>
+                  <a
+                    href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                    style={{ fontSize: 16 }}
+                  >
                     {terms}
                   </a>
                 </p>
@@ -315,7 +321,10 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   Go to leaderboard
                 </Link>
                 <p>
-                  <a href="/" style={{ fontSize: 16 }}>
+                  <a
+                    href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                    style={{ fontSize: 16 }}
+                  >
                     {terms}
                   </a>
                 </p>
@@ -348,7 +357,10 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   Go to leaderboard
                 </Link>
                 <p>
-                  <a href="/" style={{ fontSize: 16 }}>
+                  <a
+                    href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                    style={{ fontSize: 16 }}
+                  >
                     {terms}
                   </a>
                 </p>

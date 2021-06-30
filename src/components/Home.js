@@ -156,7 +156,10 @@ export default function Home({ data, tries, apiUrl }) {
                 Go to leaderboard
               </Link>
               <p style={{ marginTop: 20 }}>
-                <a href="/" style={{ fontSize: 16 }}>
+                <a
+                  href="https://www-origin.penhaligons.com/uk/en/game-official-regulation"
+                  style={{ fontSize: 16 }}
+                >
                   {terms}
                 </a>
               </p>
