@@ -57,7 +57,7 @@ const GameStyles = styled.div`
     pointer-events: none;
     .timer-arch {
       position: absolute;
-      bottom: 70px;
+      bottom: 90px;
       right: 20px;
       display: block;
       width: 80px;
@@ -70,7 +70,7 @@ const GameStyles = styled.div`
     }
     .timer {
       position: absolute;
-      bottom: 0px;
+      bottom: 20px;
       right: 20px;
       background: black;
       color: var(--off-white);

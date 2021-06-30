@@ -5,12 +5,24 @@ import { useGameStateContext } from "../reducer/gameReducer";
 import Popup from "./Popup";
 import { badWords } from "../assets/bad-words";
 import tennisPlayer from "../assets/images/tennis-player.png";
-import { indexOf } from "lodash";
 
 const StyledLeaderboardForm = styled.div`
   position: relative;
   > * {
     margin-bottom: 20px;
+  }
+  .form-close-button {
+    position: absolute;
+    top: -30%;
+    right: -8%;
+    font-size: 2rem;
+    font-weight: 300;
+    padding: 10px;
+    line-height: 1;
+    background: none;
+    outline: none;
+    border: none;
+    cursor: pointer;
   }
   .form-image {
     display: block;
@@ -62,6 +74,9 @@ export default function LeaderboardForm() {
       {!formSubmitted && (
         <Popup>
           <StyledLeaderboardForm>
+            <button className="form-close-button" onClick={handleReturnButton}>
+              &times;
+            </button>
             <img className="form-image" src={tennisPlayer} alt="" />
             <div>
               <h1 style={{ fontSize: 60, marginTop: 100 }}>{score}</h1>
