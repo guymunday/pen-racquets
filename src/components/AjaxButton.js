@@ -29,10 +29,10 @@ export default function AjaxButton({ setFormSubmitted, ...rest }) {
           name="userPrize"
           value={
             prize === "bronze"
-              ? "PLAY1"
+              ? "PLAY3"
               : prize === "silver"
               ? "PLAY2"
-              : "PLAY3"
+              : "PLAY1"
           }
         />
         <button
