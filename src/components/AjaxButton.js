@@ -21,6 +21,7 @@ export default function AjaxButton({ setFormSubmitted, ...rest }) {
         method="post"
         ref={formRef}
         {...rest}
+        onSubmit={(e) => handleFormSubmit(e)}
       >
         <input type="hidden" name="userScore" value={score} />
         <input type="hidden" name="userAttempts" value="1" />
@@ -38,7 +39,6 @@ export default function AjaxButton({ setFormSubmitted, ...rest }) {
         <button
           className="button"
           type="submit"
-          onClick={(e) => handleFormSubmit(e)}
           style={{ margin: 0, textTransform: "uppercase" }}
         >
           Add to bag

@@ -143,13 +143,14 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
     gsap.to(".prize-image", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -155,
+      yPercent: -195,
+      rotate: 6,
     });
 
     gsap.to(".prize-image-bottle", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -155,
+      yPercent: -195,
       rotate: 8,
     });
   }, [loading]);
