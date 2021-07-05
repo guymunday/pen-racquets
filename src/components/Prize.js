@@ -31,7 +31,7 @@ const PrizeStyles = styled.div`
     .prize-image-bottle {
       position: absolute;
       max-width: 170px;
-      bottom: -200%;
+      top: 200%;
       pointer-events: none;
     }
     .prize-image-bottle {
@@ -143,15 +143,14 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
     gsap.to(".prize-image", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -185,
-      rotate: -3,
+      yPercent: -155,
     });
 
     gsap.to(".prize-image-bottle", {
       delay: 0.2,
       duration: 0.8,
-      yPercent: -185,
-      rotate: 6,
+      yPercent: -155,
+      rotate: 8,
     });
   }, [loading]);
 
@@ -263,7 +262,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
               <div className="prize-image-reveal">
                 <img
                   className="prize-image-bottle"
-                  src={data?.data?.data?.result?.bronze_image?.url}
+                  src={data?.data?.data?.result?.gold_image?.url}
                   alt=""
                 />
                 <img className="image-hole" src={hole} alt="" />
