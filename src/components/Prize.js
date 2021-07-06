@@ -300,7 +300,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
               <div className="prize-image-reveal">
                 <img
                   className="prize-image-bottle"
-                  src={data?.data?.data?.result?.gold_image?.url}
+                  src={data?.data?.data?.result?.silver_image?.url}
                   alt=""
                 />
                 <img className="image-hole" src={hole} alt="" />
