@@ -91,7 +91,7 @@ export default function Home({ data, tries, apiUrl }) {
   const dispatch = useGameDispatchContext();
   const index = data?.data?.data?.index;
   const terms = index?.terms_text.replace("{tries}", tries);
-  
+
   React.useEffect(() => {
     axios
       .post(`${apiUrl}/api/v1/start`, {
@@ -108,9 +108,7 @@ export default function Home({ data, tries, apiUrl }) {
 
   React.useEffect(() => {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 200);
+      setLoading(false);
     });
   }, []);
 

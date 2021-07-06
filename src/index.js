@@ -17,17 +17,15 @@ const GlobalStyle = createGlobalStyle`
 export default function Root() {
   return (
     <>
-      <React.StrictMode>
-        <GlobalStyle />
-        <Helmet>
-          <title>Penhaligon's Racquets</title>
-        </Helmet>
-        <GlobalProvider>
-          <Layout>
-            <App />
-          </Layout>
-        </GlobalProvider>
-      </React.StrictMode>
+      <GlobalStyle />
+      <Helmet>
+        <title>Penhaligon's Racquets</title>
+      </Helmet>
+      <GlobalProvider>
+        <Layout>
+          <App />
+        </Layout>
+      </GlobalProvider>
     </>
   );
 }

@@ -330,13 +330,6 @@ export default function Play({ data, tries, apiUrl }) {
       ctx.drawImage(image, x - 15, y - 15, 30, 30);
     }
 
-    // draw text
-    // function drawText(text, x, y, color) {
-    //   ctx.fillStyle = color;
-    //   ctx.font = "45px Canopee";
-    //   ctx.fillText(text, x, y);
-    // }
-
     function renderGame() {
       // clear the canvas first
       drawRect(0, 0, canvas.width, canvas.height, "#cf9970");
@@ -363,6 +356,39 @@ export default function Play({ data, tries, apiUrl }) {
     function movePaddleMobile(e) {
       user.x = e.touches[0].clientX - window.innerWidth / 2 + user.width * 1.5;
     }
+
+    // smooth keyboard control
+    const tickRate = 1;
+    const keyDown = {};
+    const keyMap = {
+      ArrowLeft: "ArrowLeft",
+      ArrowRight: "ArrowRight",
+      a: "a",
+      d: "d",
+    };
+
+    window.addEventListener("keydown", (e) => {
+      keyDown[keyMap[e.key]] = true;
+    });
+
+    window.addEventListener("keyup", (e) => {
+      keyDown[keyMap[e.key]] = false;
+    });
+
+    function tick() {
+      if (keyDown["ArrowLeft"]) {
+        user.x = user.x - 2;
+      } else if (keyDown["ArrowRight"]) {
+        user.x = user.x + 2;
+      } else if (keyDown["a"]) {
+        user.x = user.x - 2;
+      } else if (keyDown["d"]) {
+        user.x = user.x + 2;
+      }
+      setTimeout(tick, tickRate);
+    }
+
+    tick();
 
     // collision detection
     function collision(b, p) {
@@ -475,7 +501,6 @@ export default function Play({ data, tries, apiUrl }) {
           id: res.data.data.id,
         });
         startGame();
-        console.log(res, "good to go");
       })
       .catch((error) => console.log(error));
   }, []);
