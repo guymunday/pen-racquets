@@ -150,6 +150,18 @@ export default function Play({ data, tries, apiUrl }) {
   const silver = data?.data?.data?.settings?.point_silver;
   const gold = data?.data?.data?.settings?.point_gold;
 
+  const bronzeInStock =
+    data?.data?.data?.settings?.stock_bronze > 0 ||
+    data?.data?.data?.settings?.stock_bronze_unlimited > 0;
+
+  const silverInStock =
+    data?.data?.data?.settings?.stock_silver > 0 ||
+    data?.data?.data?.settings?.stock_silver_unlimited > 0;
+
+  const goldInStock =
+    data?.data?.data?.settings?.stock_gold > 0 ||
+    data?.data?.data?.settings?.stock_gold_unlimited > 0;
+
   function saveToCookies() {
     let tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -189,13 +201,19 @@ export default function Play({ data, tries, apiUrl }) {
       if (gameScore < bronze) {
         dispatch({ type: "UPDATE_PRIZE", prize: "none" });
         dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "none" });
-      } else if (gameScore >= bronze && gameScore < silver) {
+      } else if (gameScore >= bronze && gameScore < silver && bronzeInStock) {
         dispatch({ type: "UPDATE_PRIZE", prize: "PLAY3" });
         dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY3" });
-      } else if (gameScore >= silver && gameScore < gold) {
+      } else if (
+        (gameScore >= silver && gameScore < gold && silverInStock) ||
+        (gameScore >= bronze && gameScore < silver && !bronzeInStock)
+      ) {
         dispatch({ type: "UPDATE_PRIZE", prize: "PLAY2" });
         dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY2" });
-      } else if (gameScore >= gold) {
+      } else if (
+        (gameScore >= gold && goldInStock) ||
+        (gameScore >= silver && gameScore < gold && !silverInStock)
+      ) {
         dispatch({ type: "UPDATE_PRIZE", prize: "PLAY1" });
         dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY1" });
       }
