@@ -9,14 +9,14 @@ export default function AddedToCart({ data, terms }) {
   return (
     <>
       <Popup>
-        {prize === "bronze" ? (
+        {prize === "PLAY3" ? (
           <img
             className="cart-image"
             src={data?.data?.data?.result?.bronze_image?.url}
             alt=""
             style={{ maxWidth: 200, margin: "inherit auto" }}
           />
-        ) : prize === "silver" ? (
+        ) : prize === "PLAY2" ? (
           <img
             className="cart-image"
             src={data?.data?.data?.result?.silver_image?.url}

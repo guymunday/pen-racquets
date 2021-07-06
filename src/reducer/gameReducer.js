@@ -1,5 +1,4 @@
-import * as React from "react";
-import { createContext, useReducer, useContext } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 
 let initialGameContext = {};
 

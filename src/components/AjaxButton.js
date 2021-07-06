@@ -25,17 +25,7 @@ export default function AjaxButton({ setFormSubmitted, ...rest }) {
       >
         <input type="hidden" name="userScore" value={score} />
         <input type="hidden" name="userAttempts" value="1" />
-        <input
-          type="hidden"
-          name="userPrize"
-          value={
-            prize === "bronze"
-              ? "PLAY3"
-              : prize === "silver"
-              ? "PLAY2"
-              : "PLAY1"
-          }
-        />
+        <input type="hidden" name="userPrize" value={prize} />
         <button
           className="button"
           type="submit"

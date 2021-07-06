@@ -91,9 +91,9 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
     hole,
     previous === "none"
       ? data?.data?.data?.result?.lost_image?.url
-      : previous === "bronze"
+      : previous === "PLAY3"
       ? data?.data?.data?.result?.bronze_image?.url
-      : previous === "silver"
+      : previous === "PLAY2"
       ? data?.data?.data?.result?.silver_image?.url
       : data?.data?.data?.result?.gold_image?.url,
   ];
@@ -258,7 +258,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                 </p>
               </div>
             </>
-          ) : previous === "bronze" ? (
+          ) : previous === "PLAY3" ? (
             <>
               <div className="prize-image-reveal">
                 <img
@@ -294,7 +294,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                 </p>
               </div>
             </>
-          ) : previous === "silver" ? (
+          ) : previous === "PLAY2" ? (
             <>
               <div className="prize-image-reveal">
                 <img
@@ -330,7 +330,7 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                 </p>
               </div>
             </>
-          ) : previous === "gold" ? (
+          ) : previous === "PLAY1" ? (
             <>
               <div className="prize-image-reveal">
                 <img

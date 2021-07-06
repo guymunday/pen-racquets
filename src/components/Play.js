@@ -190,14 +190,14 @@ export default function Play({ data, tries, apiUrl }) {
         dispatch({ type: "UPDATE_PRIZE", prize: "none" });
         dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "none" });
       } else if (gameScore >= bronze && gameScore < silver) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "bronze" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "bronze" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY3" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY3" });
       } else if (gameScore >= silver && gameScore < gold) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "silver" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "silver" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY2" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY2" });
       } else if (gameScore >= gold) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "gold" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "gold" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY1" });
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY1" });
       }
     }
   }, [timer]);
