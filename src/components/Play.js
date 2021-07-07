@@ -150,17 +150,9 @@ export default function Play({ data, tries, apiUrl }) {
   const silver = data?.data?.data?.settings?.point_silver;
   const gold = data?.data?.data?.settings?.point_gold;
 
-  const bronzeInStock =
-    data?.data?.data?.settings?.stock_bronze_unlimited > 0 ||
-    data?.data?.data?.settings?.stock_bronze > 0;
-
-  const silverInStock =
-    data?.data?.data?.settings?.stock_silver_unlimited > 0 ||
-    data?.data?.data?.settings?.stock_silver > 0; 
-
-  const goldInStock =
-    data?.data?.data?.settings?.stock_gold_unlimited > 0 ||
-    data?.data?.data?.settings?.stock_gold > 0; 
+  const bronzeInStock = data?.data?.data?.settings?.stock_bronze > 0;
+  const silverInStock = data?.data?.data?.settings?.stock_silver > 0;
+  const goldInStock = data?.data?.data?.settings?.stock_gold > 0;
 
   function saveToCookies() {
     let tomorrow = new Date();
