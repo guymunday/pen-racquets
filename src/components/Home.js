@@ -147,7 +147,7 @@ export default function Home({ data, tries, apiUrl }) {
               >
                 {index?.button_text}
               </Link>
-              <p>{index?.text}</p>
+              <p style={{ fontWeight: 700, fontSize: 26 }}>{index?.text}</p>
               <Link
                 to="/leaderboard"
                 style={{ marginTop: 20 }}

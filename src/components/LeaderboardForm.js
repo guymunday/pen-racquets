@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 import { useGameStateContext } from "../reducer/gameReducer";
 import Popup from "./Popup";
 import { badWords } from "../assets/bad-words";
@@ -35,13 +36,12 @@ const StyledLeaderboardForm = styled.div`
 
 export default function LeaderboardForm({ data }) {
   const [formSubmitted, setFormSubmitted] = React.useState(false);
+  const [shouldRedirect, setShouldRedirect] = React.useState(false);
   const [formBlocked, setFormBlocked] = React.useState(
     data?.data?.data?.result?.top_placeholder
   );
   const [initial, setInitial] = React.useState("");
   const { id, url, score } = useGameStateContext();
-
-  console.log(data);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -53,6 +53,7 @@ export default function LeaderboardForm({ data }) {
       })
       .then((res) => {
         setFormSubmitted(true);
+        setShouldRedirect(true);
       })
       .catch((error) => {
         console.log(error);
@@ -71,6 +72,10 @@ export default function LeaderboardForm({ data }) {
 
   function handleReturnButton() {
     setFormSubmitted(true);
+  }
+
+  if (shouldRedirect) {
+    return <Redirect to="/leaderboard" />;
   }
 
   return (
