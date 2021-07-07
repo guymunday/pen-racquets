@@ -27,17 +27,21 @@ const StyledLeaderboardForm = styled.div`
   .form-image {
     display: block;
     position: absolute;
-    top: -65%;
+    top: -72%;
     left: 30%;
     width: 180px;
   }
 `;
 
-export default function LeaderboardForm() {
+export default function LeaderboardForm({ data }) {
   const [formSubmitted, setFormSubmitted] = React.useState(false);
-  const [formBlocked, setFormBlocked] = React.useState("Enter your initials");
+  const [formBlocked, setFormBlocked] = React.useState(
+    data?.data?.data?.result?.top_placeholder
+  );
   const [initial, setInitial] = React.useState("");
   const { id, url, score } = useGameStateContext();
+
+  console.log(data);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -61,7 +65,7 @@ export default function LeaderboardForm() {
       setFormBlocked("No bad language!");
     } else {
       setInitial(e.target.value);
-      setFormBlocked("Enter your initials");
+      setFormBlocked(data?.data?.data?.result?.top_placeholder);
     }
   }
 
@@ -80,12 +84,9 @@ export default function LeaderboardForm() {
             <img className="form-image" src={tennisPlayer} alt="" />
             <div>
               <h1 style={{ fontSize: 60, marginTop: 100 }}>{score}</h1>
-              <h2>Your score</h2>
+              <h2>{data?.data?.data?.result?.top_title}</h2>
             </div>
-            <p>
-              Wow, you got a top score. Enter your initials on the leaderboard
-              for internet fame.
-            </p>
+            <p>{data?.data?.data?.result?.top_text}</p>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -102,11 +103,11 @@ export default function LeaderboardForm() {
                 type="submit"
                 style={{ width: "100%", margin: 0 }}
               >
-                Submit
+                {data?.data?.data?.result?.top_submit}
               </button>
             </form>
             <button className="button" onClick={handleReturnButton}>
-              Return to your prize
+              {data?.data?.data?.result?.top_return}
             </button>
           </StyledLeaderboardForm>
         </Popup>

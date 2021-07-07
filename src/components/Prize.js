@@ -371,7 +371,9 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
             <Redirect to="/" />
           )}
           <BottomButtons className="prize-reveal" />
-          {showLeaderboardForm && submitted !== 1 && <LeaderboardForm />}
+          {showLeaderboardForm && submitted !== 1 && (
+            <LeaderboardForm data={data} />
+          )}
           {formSubmitted && <AddedToCart data={data} terms={terms} />}
         </PrizeStyles>
       )}

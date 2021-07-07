@@ -5,14 +5,14 @@ import styled from "styled-components";
 import { useGameDispatchContext } from "../reducer/gameReducer";
 import { loadImage } from "../actions/actions";
 import BottomButtons from "./BottomButtons";
+import KeenRedirect from "./KeenRedirect";
+import ClosedRedirect from "./ClosedRedirect";
 
 // images
 import lemonBall from "../assets/images/lemon-ball.png";
 import tennisPlayer from "../assets/images/tennis-player.png";
 import umpire from "../assets/images/umpire.png";
 import background from "../assets/images/home-background.png";
-import KeenRedirect from "./KeenRedirect";
-import ClosedRedirect from "./ClosedRedirect";
 
 const imagesToLoad = [lemonBall, tennisPlayer, umpire, background];
 
