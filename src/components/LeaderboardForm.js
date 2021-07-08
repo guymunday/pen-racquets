@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import axios from "axios";
-import { Redirect } from "react-router-dom";
-import { useGameStateContext } from "../reducer/gameReducer";
-import Popup from "./Popup";
-import { badWords } from "../assets/bad-words";
-import tennisPlayer from "../assets/images/tennis-player.png";
+import React from "react"
+import styled from "styled-components"
+import axios from "axios"
+import { Redirect } from "react-router-dom"
+import { useGameStateContext } from "../reducer/gameReducer"
+import Popup from "./Popup"
+import { badWords } from "../assets/bad-words"
+import tennisPlayer from "../assets/images/tennis-player.png"
 
 const StyledLeaderboardForm = styled.div`
   position: relative;
@@ -32,19 +32,19 @@ const StyledLeaderboardForm = styled.div`
     left: 30%;
     width: 180px;
   }
-`;
+`
 
 export default function LeaderboardForm({ data }) {
-  const [formSubmitted, setFormSubmitted] = React.useState(false);
-  const [shouldRedirect, setShouldRedirect] = React.useState(false);
+  const [formSubmitted, setFormSubmitted] = React.useState(false)
+  const [shouldRedirect, setShouldRedirect] = React.useState(false)
   const [formBlocked, setFormBlocked] = React.useState(
     data?.data?.data?.result?.top_placeholder
-  );
-  const [initial, setInitial] = React.useState("");
-  const { id, url, score } = useGameStateContext();
+  )
+  const [initial, setInitial] = React.useState("")
+  const { id, url, score } = useGameStateContext()
 
   function handleSubmit(e) {
-    e.preventDefault();
+    e.preventDefault()
 
     axios
       .post(`${url}/api/v1/leaderboard`, {
@@ -52,30 +52,30 @@ export default function LeaderboardForm({ data }) {
         initial,
       })
       .then((res) => {
-        setFormSubmitted(true);
-        setShouldRedirect(true);
+        setFormSubmitted(true)
+        setShouldRedirect(true)
       })
       .catch((error) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   }
 
   function handleOnChange(e) {
     if (badWords.indexOf(e.target.value) > -1) {
-      setInitial("");
-      setFormBlocked("No bad language!");
+      setInitial("")
+      setFormBlocked("No bad language!")
     } else {
-      setInitial(e.target.value);
-      setFormBlocked(data?.data?.data?.result?.top_placeholder);
+      setInitial(e.target.value)
+      setFormBlocked(data?.data?.data?.result?.top_placeholder)
     }
   }
 
   function handleReturnButton() {
-    setFormSubmitted(true);
+    setFormSubmitted(true)
   }
 
   if (shouldRedirect) {
-    return <Redirect to="/leaderboard" />;
+    return <Redirect to="/leaderboard" />
   }
 
   return (
@@ -118,5 +118,5 @@ export default function LeaderboardForm({ data }) {
         </Popup>
       )}
     </>
-  );
+  )
 }

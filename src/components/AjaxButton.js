@@ -1,18 +1,18 @@
-import React from "react";
-import { useGameStateContext } from "../reducer/gameReducer";
+import React from "react"
+import { useGameStateContext } from "../reducer/gameReducer"
 
 export default function AjaxButton({ setFormSubmitted, ...rest }) {
-  const formRef = React.useRef(null);
-  const { score, prize } = useGameStateContext();
+  const formRef = React.useRef(null)
+  const { score, prize } = useGameStateContext()
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setFormSubmitted(true);
+    e.preventDefault()
+    setFormSubmitted(true)
 
     setTimeout(() => {
-      formRef.current.submit();
-    }, 2000);
-  };
+      formRef.current.submit()
+    }, 2000)
+  }
 
   return (
     <>
@@ -35,5 +35,5 @@ export default function AjaxButton({ setFormSubmitted, ...rest }) {
         </button>
       </form>
     </>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import React from "react";
+import React from "react"
 
-import ukimage from "../assets/images/old-game/uk.png";
-import usimage from "../assets/images/old-game/us_0.png";
-import sauimage from "../assets/images/old-game/sau_0.png";
-import aeimage from "../assets/images/old-game/ae_0.png";
+import ukimage from "../assets/images/old-game/uk.png"
+import usimage from "../assets/images/old-game/us_0.png"
+import sauimage from "../assets/images/old-game/sau_0.png"
+import aeimage from "../assets/images/old-game/ae_0.png"
 export default class Footer extends React.Component {
   render() {
     return (
@@ -479,6 +479,6 @@ export default class Footer extends React.Component {
           </div>
         </div>
       </footer>
-    );
+    )
   }
 }

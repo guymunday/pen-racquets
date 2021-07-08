@@ -1,11 +1,11 @@
-import React from "react";
-import axios from "axios";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import BottomButtons from "./BottomButtons";
-import PlayAgainButton from "./PlayAgainButton";
-import { useGameStateContext } from "../reducer/gameReducer";
-import { useCookies } from "react-cookie";
+import React from "react"
+import axios from "axios"
+import styled from "styled-components"
+import { Link } from "react-router-dom"
+import BottomButtons from "./BottomButtons"
+import PlayAgainButton from "./PlayAgainButton"
+import { useGameStateContext } from "../reducer/gameReducer"
+import { useCookies } from "react-cookie"
 
 const LeaderboardStyles = styled.div`
   width: 100%;
@@ -30,33 +30,33 @@ const LeaderboardStyles = styled.div`
       }
     }
   }
-`;
+`
 
 export default function Leaderboard({ mainData, tries, apiUrl }) {
-  const [leaderboardData, setLeaderboardData] = React.useState({});
-  const [loading, setLoading] = React.useState(true);
-  const { previous } = useGameStateContext();
-  const [cookies] = useCookies(["tries"]);
+  const [leaderboardData, setLeaderboardData] = React.useState({})
+  const [loading, setLoading] = React.useState(true)
+  const { previous } = useGameStateContext()
+  const [cookies] = useCookies(["tries"])
 
   const terms = mainData?.data?.data?.index?.terms_text.replace(
     "{tries}",
     tries
-  );
+  )
 
   React.useEffect(() => {
     axios
       .get(`${apiUrl}/api/v1/leaderboard`)
       .then((res) => {
-        setLeaderboardData(res);
-        setLoading(false);
+        setLeaderboardData(res)
+        setLoading(false)
       })
       .catch((error) =>
         console.log(
           "Oh no! There has been an error fetching the leaderboard!",
           error
         )
-      );
-  }, []);
+      )
+  }, [])
 
   return (
     <>
@@ -72,7 +72,7 @@ export default function Leaderboard({ mainData, tries, apiUrl }) {
                     <p>{l?.initial}</p>
                     <p>{l?.point}</p>
                   </div>
-                );
+                )
               })}
             </div>
             {cookies.tries === undefined && (
@@ -109,5 +109,5 @@ export default function Leaderboard({ mainData, tries, apiUrl }) {
         </>
       )}
     </>
-  );
+  )
 }

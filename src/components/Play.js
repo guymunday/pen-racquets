@@ -1,22 +1,22 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 import {
   useGameStateContext,
   useGameDispatchContext,
-} from "../reducer/gameReducer";
-import { Redirect } from "react-router-dom";
-import { useCookies } from "react-cookie";
-import gsap from "gsap";
-import axios from "axios";
-import KeenRedirect from "./KeenRedirect";
-import ClosedRedirect from "./ClosedRedirect";
-import BottomButtons from "./BottomButtons";
+} from "../reducer/gameReducer"
+import { Redirect } from "react-router-dom"
+import { useCookies } from "react-cookie"
+import gsap from "gsap"
+import axios from "axios"
+import KeenRedirect from "./KeenRedirect"
+import ClosedRedirect from "./ClosedRedirect"
+import BottomButtons from "./BottomButtons"
 
 // images
-import lemonBall from "../assets/images/lemon.png";
-import timerArch from "../assets/images/timer.png";
+import lemonBall from "../assets/images/lemon.png"
+import timerArch from "../assets/images/timer.png"
 
-gsap.config({ nullTargetWarn: false });
+gsap.config({ nullTargetWarn: false })
 
 const GameStyles = styled.div`
   canvas {
@@ -136,81 +136,81 @@ const GameStyles = styled.div`
       font-size: 30px;
     }
   }
-`;
+`
 
 export default function Play({ data, tries, apiUrl }) {
-  const [gameScore, setGameScore] = React.useState(0);
-  const [counter, setCounter] = React.useState(3);
-  const [timer, setTimer] = React.useState(60);
-  const [cookies, setCookie] = useCookies(["tries"]);
-  const dispatch = useGameDispatchContext();
-  const { score, prize } = useGameStateContext();
+  const [gameScore, setGameScore] = React.useState(0)
+  const [counter, setCounter] = React.useState(3)
+  const [timer, setTimer] = React.useState(60)
+  const [cookies, setCookie] = useCookies(["tries"])
+  const dispatch = useGameDispatchContext()
+  const { score, prize } = useGameStateContext()
 
-  const bronze = data?.data?.data?.settings?.point_bronze;
-  const silver = data?.data?.data?.settings?.point_silver;
-  const gold = data?.data?.data?.settings?.point_gold;
+  const bronze = data?.data?.data?.settings?.point_bronze
+  const silver = data?.data?.data?.settings?.point_silver
+  const gold = data?.data?.data?.settings?.point_gold
 
-  const bronzeInStock = data?.data?.data?.settings?.stock_bronze > 0;
-  const silverInStock = data?.data?.data?.settings?.stock_silver > 0;
-  const goldInStock = data?.data?.data?.settings?.stock_gold > 0;
+  const bronzeInStock = data?.data?.data?.settings?.stock_bronze > 0
+  const silverInStock = data?.data?.data?.settings?.stock_silver > 0
+  const goldInStock = data?.data?.data?.settings?.stock_gold > 0
 
   function saveToCookies() {
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0);
-    tomorrow.setMinutes(0);
-    tomorrow.setMilliseconds(0);
+    let tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setHours(0)
+    tomorrow.setMinutes(0)
+    tomorrow.setMilliseconds(0)
 
     if (!cookies.tries) {
-      setCookie("tries", `${tries - 1}`, { path: "/", expires: tomorrow });
+      setCookie("tries", `${tries - 1}`, { path: "/", expires: tomorrow })
     } else {
-      let attempts = parseInt(cookies.tries) - 1;
+      let attempts = parseInt(cookies.tries) - 1
       setCookie("tries", attempts.toString(), {
         path: "/",
         expires: tomorrow,
-      });
+      })
     }
   }
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      counter <= 3 && counter > 0 && setCounter(counter - 1);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [counter]);
+      counter <= 3 && counter > 0 && setCounter(counter - 1)
+    }, 1000)
+    return () => clearTimeout(timeout)
+  }, [counter])
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
-      counter <= 0 && timer > 0 && setTimer(timer - 1);
-    }, 1000);
-    return () => clearTimeout(timeout);
-  }, [counter, timer]);
+      counter <= 0 && timer > 0 && setTimer(timer - 1)
+    }, 1000)
+    return () => clearTimeout(timeout)
+  }, [counter, timer])
 
   React.useEffect(() => {
     if (timer === 0) {
-      dispatch({ type: "UPDATE_SCORE", score: gameScore });
+      dispatch({ type: "UPDATE_SCORE", score: gameScore })
 
       if (gameScore < bronze) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "none" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "none" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "none" })
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "none" })
       } else if (gameScore >= bronze && gameScore < silver && bronzeInStock) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY3" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY3" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY3" })
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY3" })
       } else if (
         (gameScore >= silver && gameScore < gold && silverInStock) ||
         (gameScore >= bronze && gameScore < silver && !bronzeInStock)
       ) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY2" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY2" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY2" })
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY2" })
       } else if (
         (gameScore >= gold && goldInStock) ||
         (gameScore >= silver && gameScore < gold && !silverInStock)
       ) {
-        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY1" });
-        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY1" });
+        dispatch({ type: "UPDATE_PRIZE", prize: "PLAY1" })
+        dispatch({ type: "UPDATE_PREVIOUS_PRIZE", previous: "PLAY1" })
       }
     }
-  }, [timer]);
+  }, [timer])
 
   React.useEffect(() => {
     gsap.fromTo(
@@ -219,43 +219,43 @@ export default function Play({ data, tries, apiUrl }) {
         yPercent: 100,
       },
       { yPercent: 0 }
-    );
-  }, []);
+    )
+  }, [])
 
   React.useEffect(() => {
     if (timer < 59) {
       gsap.to(".fade-out", {
         duration: 0.4,
         autoAlpha: 0,
-      });
+      })
     }
-  }, [timer]);
+  }, [timer])
 
   React.useEffect(() => {
     if (timer === 0) {
       gsap.to("#pong", {
         duration: 0.4,
         autoAlpha: 0,
-      });
+      })
 
       gsap.to(".score-counter", {
         duration: 0.4,
         autoAlpha: 0,
-      });
+      })
     }
-  }, [timer]);
+  }, [timer])
 
   React.useEffect(() => {
     if (timer > 0) {
       gsap.to("#pong", {
         duration: 0.4,
         autoAlpha: 1,
-      });
+      })
     }
-  }, [timer]);
+  }, [timer])
 
   React.useEffect(() => {
-    let tl = gsap.timeline();
+    let tl = gsap.timeline()
 
     if (timer === 0) {
       tl.from(".fade-in", {
@@ -265,15 +265,15 @@ export default function Play({ data, tries, apiUrl }) {
         delay: 1,
         duration: 0.4,
         autoAlpha: 0,
-      });
+      })
     }
-  }, [timer]);
+  }, [timer])
 
   function initialiseGame() {
     // select canvas
-    const canvas = document.getElementById("pong");
-    const ctx = canvas.getContext("2d");
-    const ballImage = document.getElementById("ball");
+    const canvas = document.getElementById("pong")
+    const ctx = canvas.getContext("2d")
+    const ballImage = document.getElementById("ball")
 
     // create the computer paddle
     const com = {
@@ -283,7 +283,7 @@ export default function Play({ data, tries, apiUrl }) {
       width: 80,
       color: "#E5E0CE",
       score: 0,
-    };
+    }
 
     // create the user paddle
     const user = {
@@ -293,7 +293,7 @@ export default function Play({ data, tries, apiUrl }) {
       width: 80,
       color: "#E5E0CE",
       score: 0,
-    };
+    }
 
     // create the ball
     const ball = {
@@ -304,7 +304,7 @@ export default function Play({ data, tries, apiUrl }) {
       velocityX: 5,
       velocityY: 5,
       color: "#E5E0CE",
-    };
+    }
 
     // create the net
     const net = {
@@ -313,191 +313,191 @@ export default function Play({ data, tries, apiUrl }) {
       width: canvas.width,
       height: 10,
       color: "#E5E0CE",
-    };
+    }
 
     // draw the net
     function drawNet() {
-      drawRect(net.x, net.y, net.width, net.height, net.color);
+      drawRect(net.x, net.y, net.width, net.height, net.color)
     }
 
     // draw rectangle function
     function drawRect(x, y, w, h, color) {
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, w, h);
+      ctx.fillStyle = color
+      ctx.fillRect(x, y, w, h)
     }
 
     // draw circle function
     function drawCircle(x, y, r, color) {
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2, false);
-      ctx.closePath();
-      ctx.fill();
+      ctx.fillStyle = color
+      ctx.beginPath()
+      ctx.arc(x, y, r, 0, Math.PI * 2, false)
+      ctx.closePath()
+      ctx.fill()
     }
 
     // draw image for the lemon
     function drawBall(image, x, y) {
-      ctx.drawImage(image, x - 15, y - 15, 30, 30);
+      ctx.drawImage(image, x - 15, y - 15, 30, 30)
     }
 
     function renderGame() {
       // clear the canvas first
-      drawRect(0, 0, canvas.width, canvas.height, "#cf9970");
+      drawRect(0, 0, canvas.width, canvas.height, "#cf9970")
 
       // draw the net
-      drawNet();
+      drawNet()
 
       // draw paddles
-      drawRect(user.x, user.y, user.width, user.height, user.color);
-      drawRect(com.x, com.y, com.width, com.height, com.color);
+      drawRect(user.x, user.y, user.width, user.height, user.color)
+      drawRect(com.x, com.y, com.width, com.height, com.color)
 
-      drawCircle(ball.x, ball.y, ball.radius, ball.color);
-      drawBall(ballImage, ball.x, ball.y);
+      drawCircle(ball.x, ball.y, ball.radius, ball.color)
+      drawBall(ballImage, ball.x, ball.y)
     }
 
     // paddle control
-    canvas.addEventListener("mousemove", movePaddle);
-    canvas.addEventListener("touchmove", movePaddleMobile);
+    canvas.addEventListener("mousemove", movePaddle)
+    canvas.addEventListener("touchmove", movePaddleMobile)
 
     function movePaddle(e) {
-      user.x = e.clientX - window.innerWidth / 2 + user.width * 1.5;
+      user.x = e.clientX - window.innerWidth / 2 + user.width * 1.5
     }
 
     function movePaddleMobile(e) {
-      user.x = e.touches[0].clientX - window.innerWidth / 2 + user.width * 1.5;
+      user.x = e.touches[0].clientX - window.innerWidth / 2 + user.width * 1.5
     }
 
     // smooth keyboard control
-    const tickRate = 1;
-    const keyDown = {};
+    const tickRate = 1
+    const keyDown = {}
     const keyMap = {
       ArrowLeft: "ArrowLeft",
       ArrowRight: "ArrowRight",
       a: "a",
       d: "d",
-    };
+    }
 
     window.addEventListener("keydown", (e) => {
-      keyDown[keyMap[e.key]] = true;
-    });
+      keyDown[keyMap[e.key]] = true
+    })
 
     window.addEventListener("keyup", (e) => {
-      keyDown[keyMap[e.key]] = false;
-    });
+      keyDown[keyMap[e.key]] = false
+    })
 
     function tick() {
       if (keyDown["ArrowLeft"]) {
-        user.x = user.x - 2;
+        user.x = user.x - 2
       } else if (keyDown["ArrowRight"]) {
-        user.x = user.x + 2;
+        user.x = user.x + 2
       } else if (keyDown["a"]) {
-        user.x = user.x - 2;
+        user.x = user.x - 2
       } else if (keyDown["d"]) {
-        user.x = user.x + 2;
+        user.x = user.x + 2
       }
-      setTimeout(tick, tickRate);
+      setTimeout(tick, tickRate)
     }
 
-    tick();
+    tick()
 
     // collision detection
     function collision(b, p) {
-      b.top = b.y - b.radius;
-      b.bottom = b.y + b.radius;
-      b.left = b.x - b.radius;
-      b.right = b.x + b.radius;
+      b.top = b.y - b.radius
+      b.bottom = b.y + b.radius
+      b.left = b.x - b.radius
+      b.right = b.x + b.radius
 
-      p.top = p.y;
-      p.bottom = p.y + p.height;
-      p.left = p.x;
-      p.right = p.x + p.width;
+      p.top = p.y
+      p.bottom = p.y + p.height
+      p.left = p.x
+      p.right = p.x + p.width
 
       return (
         b.right > p.left &&
         b.bottom > p.top &&
         b.left < p.right &&
         b.top < p.bottom
-      );
+      )
     }
 
     // reset ball
     function resetBall() {
-      ball.x = canvas.width / 2;
-      ball.y = canvas.height / 2;
+      ball.x = canvas.width / 2
+      ball.y = canvas.height / 2
 
-      ball.velocityX = 5;
-      ball.velocityY = 5;
+      ball.velocityX = 5
+      ball.velocityY = 5
 
-      ball.speed = 5;
+      ball.speed = 5
     }
 
     // update / logic
     function update() {
-      ball.x += ball.velocityX;
-      ball.y += ball.velocityY;
+      ball.x += ball.velocityX
+      ball.y += ball.velocityY
 
       // simple AI to control the computer
-      let computerLevel = 0.04;
-      com.x += (ball.x - (com.x + com.width / 2)) * computerLevel;
+      let computerLevel = 0.04
+      com.x += (ball.x - (com.x + com.width / 2)) * computerLevel
 
       if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
-        ball.velocityX = -ball.velocityX;
+        ball.velocityX = -ball.velocityX
       }
 
-      let player = ball.y < canvas.width / 2 ? com : user;
+      let player = ball.y < canvas.width / 2 ? com : user
 
       if (collision(ball, player)) {
         // calculate where the ball hit the player
-        let collidePoint = ball.x - (player.x + player.width / 2);
+        let collidePoint = ball.x - (player.x + player.width / 2)
 
         // normalisation
-        collidePoint = collidePoint / (player.width / 2);
+        collidePoint = collidePoint / (player.width / 2)
 
         // calculate angle in Radian
-        let angleRad = (collidePoint * Math.PI) / 4;
+        let angleRad = (collidePoint * Math.PI) / 4
 
         // direction of the ball
-        let direction = ball.y < canvas.height / 2 ? 1 : -1;
+        let direction = ball.y < canvas.height / 2 ? 1 : -1
 
         // change vel X and Y
-        ball.velocityX = direction * ball.speed * Math.sin(angleRad);
-        ball.velocityY = direction * ball.speed * Math.cos(angleRad);
+        ball.velocityX = direction * ball.speed * Math.sin(angleRad)
+        ball.velocityY = direction * ball.speed * Math.cos(angleRad)
 
         // everytime the ball hits, increase the speed
-        ball.speed += 0.9;
+        ball.speed += 0.9
       }
       // update the score
       if (ball.y - ball.radius < 0) {
-        user.score++;
-        setGameScore(user.score);
-        resetBall();
-        ball.velocityY = -5;
+        user.score++
+        setGameScore(user.score)
+        resetBall()
+        ball.velocityY = -5
       } else if (ball.y + ball.radius > canvas.height) {
-        com.score++;
-        resetBall();
-        ball.velocityX = -5;
+        com.score++
+        resetBall()
+        ball.velocityX = -5
       }
     }
 
     // game init
     function gameInit() {
-      update();
-      renderGame();
+      update()
+      renderGame()
     }
 
     // loop the render
-    const framesPerSecond = 50;
+    const framesPerSecond = 50
 
-    setInterval(renderGame, 1000 / framesPerSecond);
+    setInterval(renderGame, 1000 / framesPerSecond)
 
     setTimeout(() => {
-      setInterval(gameInit, 1000 / framesPerSecond);
-    }, 3000);
+      setInterval(gameInit, 1000 / framesPerSecond)
+    }, 3000)
   }
 
   function startGame() {
-    initialiseGame();
-    saveToCookies();
+    initialiseGame()
+    saveToCookies()
   }
 
   React.useEffect(() => {
@@ -509,14 +509,14 @@ export default function Play({ data, tries, apiUrl }) {
         dispatch({
           type: "UPDATE_ID",
           id: res.data.data.id,
-        });
-        startGame();
+        })
+        startGame()
       })
-      .catch((error) => console.log(error));
-  }, []);
+      .catch((error) => console.log(error))
+  }, [])
 
   if (prize) {
-    return <Redirect to="/results" />;
+    return <Redirect to="/results" />
   }
 
   return (
@@ -566,5 +566,5 @@ export default function Play({ data, tries, apiUrl }) {
         <BottomButtons />
       </GameStyles>
     </>
-  );
+  )
 }

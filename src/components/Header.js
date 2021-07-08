@@ -1,8 +1,8 @@
-import React from "react";
-import altlogo from "../assets/images/old-game/alternative-penhaligons-logo.svg";
-import logo from "../assets/images/old-game/logo.svg";
-import account from "../assets/images/old-game/account.svg";
-import bag from "../assets/images/old-game/bag.svg";
+import React from "react"
+import altlogo from "../assets/images/old-game/alternative-penhaligons-logo.svg"
+import logo from "../assets/images/old-game/logo.svg"
+import account from "../assets/images/old-game/account.svg"
+import bag from "../assets/images/old-game/bag.svg"
 
 export default class Header extends React.Component {
   render() {
@@ -196,6 +196,6 @@ export default class Header extends React.Component {
           </div>
         </header>
       </>
-    );
+    )
   }
 }

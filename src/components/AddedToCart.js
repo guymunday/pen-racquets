@@ -1,10 +1,10 @@
-import React from "react";
-import { useGameStateContext } from "../reducer/gameReducer";
-import Popup from "./Popup";
+import React from "react"
+import { useGameStateContext } from "../reducer/gameReducer"
+import Popup from "./Popup"
 
 export default function AddedToCart({ data, terms }) {
-  const { prize } = useGameStateContext();
-  console.log(data?.data?.data);
+  const { prize } = useGameStateContext()
+  console.log(data?.data?.data)
 
   return (
     <>
@@ -40,5 +40,5 @@ export default function AddedToCart({ data, terms }) {
         </p>
       </Popup>
     </>
-  );
+  )
 }

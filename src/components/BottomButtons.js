@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-import music from "../assets/music.mp3";
+import React from "react"
+import styled from "styled-components"
+import { useLocation } from "react-router-dom"
+import music from "../assets/music.mp3"
 import {
   useGameDispatchContext,
   useGameStateContext,
-} from "../reducer/gameReducer";
+} from "../reducer/gameReducer"
 
 const Styles = styled.div`
   display: flex;
@@ -19,35 +19,35 @@ const Styles = styled.div`
   .tc-button {
     margin-left: 20px;
   }
-`;
+`
 
 export default function BottomButtons({ ...rest }) {
-  const audioRef = React.useRef(null);
-  const [audioPlaying, setAudioPlaying] = React.useState(false);
-  const location = useLocation();
-  const { audio } = useGameStateContext();
-  const dispatch = useGameDispatchContext();
+  const audioRef = React.useRef(null)
+  const [audioPlaying, setAudioPlaying] = React.useState(false)
+  const location = useLocation()
+  const { audio } = useGameStateContext()
+  const dispatch = useGameDispatchContext()
 
   const handleAudio = () => {
     if (!audio) {
-      audioRef.current.play();
-      dispatch({ type: "UPDATE_AUDIO", audio: 1 });
+      audioRef.current.play()
+      dispatch({ type: "UPDATE_AUDIO", audio: 1 })
     } else {
-      audioRef.current.pause();
-      dispatch({ type: "UPDATE_AUDIO", audio: null });
+      audioRef.current.pause()
+      dispatch({ type: "UPDATE_AUDIO", audio: null })
     }
-    setAudioPlaying(!audioPlaying);
-  };
+    setAudioPlaying(!audioPlaying)
+  }
 
   React.useEffect(() => {
     if (audio) {
-      audioRef.current.play();
-      setAudioPlaying(true);
+      audioRef.current.play()
+      setAudioPlaying(true)
     } else {
-      audioRef.current.pause();
-      setAudioPlaying(false);
+      audioRef.current.pause()
+      setAudioPlaying(false)
     }
-  }, [audio]);
+  }, [audio])
 
   return (
     <>
@@ -83,5 +83,5 @@ export default function BottomButtons({ ...rest }) {
         </a>
       </Styles>
     </>
-  );
+  )
 }

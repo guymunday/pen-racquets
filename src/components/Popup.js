@@ -1,6 +1,6 @@
-import React from "react";
-import styled from "styled-components";
-import { gsap } from "gsap";
+import React from "react"
+import styled from "styled-components"
+import { gsap } from "gsap"
 
 const PopupStyles = styled.div`
   position: fixed;
@@ -36,14 +36,14 @@ const PopupStyles = styled.div`
       margin-bottom: 20px;
     }
   }
-`;
+`
 
 export default function Popup({ children, ...rest }) {
   React.useEffect(() => {
     gsap.from(".popup-inner", {
       scale: 0.3,
-    });
-  }, []);
+    })
+  }, [])
 
   return (
     <>
@@ -51,5 +51,5 @@ export default function Popup({ children, ...rest }) {
         <div className="popup-inner">{children}</div>
       </PopupStyles>
     </>
-  );
+  )
 }

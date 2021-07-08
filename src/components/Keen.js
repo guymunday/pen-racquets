@@ -1,10 +1,10 @@
-import React from "react";
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { gsap } from "gsap";
-import { loadImage } from "../actions/actions";
-import hole from "../assets/images/hole.svg";
-import BottomButtons from "./BottomButtons";
+import React from "react"
+import styled from "styled-components"
+import { Link } from "react-router-dom"
+import { gsap } from "gsap"
+import { loadImage } from "../actions/actions"
+import hole from "../assets/images/hole.svg"
+import BottomButtons from "./BottomButtons"
 
 const KeenStyles = styled.div`
   .prize-image-reveal {
@@ -40,17 +40,17 @@ const KeenStyles = styled.div`
       margin: 0 auto 20px auto;
     }
   }
-`;
+`
 
 export default function Keen({ data }) {
-  const [loading, setLoading] = React.useState(true);
-  const imagesToLoad = [hole, data?.data?.data?.result?.lost_image?.url];
+  const [loading, setLoading] = React.useState(true)
+  const imagesToLoad = [hole, data?.data?.data?.result?.lost_image?.url]
 
   React.useEffect(() => {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
-      setLoading(false);
-    });
-  }, []);
+      setLoading(false)
+    })
+  }, [])
 
   React.useEffect(() => {
     gsap.to(".prize-image", {
@@ -58,8 +58,8 @@ export default function Keen({ data }) {
       duration: 0.8,
       yPercent: -185,
       rotate: -3,
-    });
-  }, [loading]);
+    })
+  }, [loading])
 
   return (
     <>
@@ -96,5 +96,5 @@ export default function Keen({ data }) {
         </KeenStyles>
       )}
     </>
-  );
+  )
 }

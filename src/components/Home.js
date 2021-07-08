@@ -1,20 +1,20 @@
-import React from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { useGameDispatchContext } from "../reducer/gameReducer";
-import { loadImage } from "../actions/actions";
-import BottomButtons from "./BottomButtons";
-import KeenRedirect from "./KeenRedirect";
-import ClosedRedirect from "./ClosedRedirect";
+import React from "react"
+import axios from "axios"
+import { Link } from "react-router-dom"
+import styled from "styled-components"
+import { useGameDispatchContext } from "../reducer/gameReducer"
+import { loadImage } from "../actions/actions"
+import BottomButtons from "./BottomButtons"
+import KeenRedirect from "./KeenRedirect"
+import ClosedRedirect from "./ClosedRedirect"
 
 // images
-import lemonBall from "../assets/images/lemon-ball.png";
-import tennisPlayer from "../assets/images/tennis-player.png";
-import umpire from "../assets/images/umpire.png";
-import background from "../assets/images/home-background.png";
+import lemonBall from "../assets/images/lemon-ball.png"
+import tennisPlayer from "../assets/images/tennis-player.png"
+import umpire from "../assets/images/umpire.png"
+import background from "../assets/images/home-background.png"
 
-const imagesToLoad = [lemonBall, tennisPlayer, umpire, background];
+const imagesToLoad = [lemonBall, tennisPlayer, umpire, background]
 
 const HomeStyles = styled.div`
   text-align: center;
@@ -84,13 +84,13 @@ const HomeStyles = styled.div`
       margin: 100px auto;
     }
   }
-`;
+`
 
 export default function Home({ data, tries, apiUrl }) {
-  const [loading, setLoading] = React.useState(true);
-  const dispatch = useGameDispatchContext();
-  const index = data?.data?.data?.index;
-  const terms = index?.terms_text.replace("{tries}", tries);
+  const [loading, setLoading] = React.useState(true)
+  const dispatch = useGameDispatchContext()
+  const index = data?.data?.data?.index
+  const terms = index?.terms_text.replace("{tries}", tries)
 
   React.useEffect(() => {
     axios
@@ -103,18 +103,18 @@ export default function Home({ data, tries, apiUrl }) {
           id: res.data.data.id,
         })
       )
-      .catch((error) => console.log(error));
-  }, []);
+      .catch((error) => console.log(error))
+  }, [])
 
   React.useEffect(() => {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
-      setLoading(false);
-    });
-  }, []);
+      setLoading(false)
+    })
+  }, [])
 
   const handleAudio = () => {
-    dispatch({ type: "UPDATE_AUDIO", audio: 1 });
-  };
+    dispatch({ type: "UPDATE_AUDIO", audio: 1 })
+  }
 
   return (
     <>
@@ -169,5 +169,5 @@ export default function Home({ data, tries, apiUrl }) {
         )}
       </HomeStyles>
     </>
-  );
+  )
 }

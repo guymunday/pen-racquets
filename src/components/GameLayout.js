@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { loadImage } from "../actions/actions";
-import { useLocation } from "react-router-dom";
-import crowd from "../assets/images/crowd.png";
-import texture from "../assets/images/texture.png";
+import React from "react"
+import styled from "styled-components"
+import { loadImage } from "../actions/actions"
+import { useLocation } from "react-router-dom"
+import crowd from "../assets/images/crowd.png"
+import texture from "../assets/images/texture.png"
 
-const imagesToLoad = [crowd, texture];
+const imagesToLoad = [crowd, texture]
 
 const GameLayoutStyles = styled.div`
   background-color: #cf9970;
@@ -35,17 +35,17 @@ const GameLayoutStyles = styled.div`
       max-width: 600px;
     }
   }
-`;
+`
 
 export default function GameLayout({ children }) {
-  const [loading, setLoading] = React.useState(true);
-  const location = useLocation();
+  const [loading, setLoading] = React.useState(true)
+  const location = useLocation()
 
   React.useEffect(() => {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
-      setLoading(false);
-    });
-  }, []);
+      setLoading(false)
+    })
+  }, [])
 
   return (
     <>
@@ -64,5 +64,5 @@ export default function GameLayout({ children }) {
         {loading && <h1 className="game-loading">Loading...</h1>}
       </GameLayoutStyles>
     </>
-  );
+  )
 }

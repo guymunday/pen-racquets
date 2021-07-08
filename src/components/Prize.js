@@ -1,21 +1,21 @@
-import React from "react";
-import styled from "styled-components";
-import axios from "axios";
-import { Link, Redirect } from "react-router-dom";
+import React from "react"
+import styled from "styled-components"
+import axios from "axios"
+import { Link, Redirect } from "react-router-dom"
 import {
   useGameStateContext,
   useGameDispatchContext,
-} from "../reducer/gameReducer";
-import { gsap } from "gsap";
-import { loadImage } from "../actions/actions";
-import AjaxButton from "./AjaxButton";
-import PlayAgainButton from "./PlayAgainButton";
-import hole from "../assets/images/hole.svg";
-import BottomButtons from "./BottomButtons";
-import LeaderboardForm from "./LeaderboardForm";
-import KeenRedirect from "./KeenRedirect";
-import ClosedRedirect from "./ClosedRedirect";
-import AddedToCart from "./AddedToCart";
+} from "../reducer/gameReducer"
+import { gsap } from "gsap"
+import { loadImage } from "../actions/actions"
+import AjaxButton from "./AjaxButton"
+import PlayAgainButton from "./PlayAgainButton"
+import hole from "../assets/images/hole.svg"
+import BottomButtons from "./BottomButtons"
+import LeaderboardForm from "./LeaderboardForm"
+import KeenRedirect from "./KeenRedirect"
+import ClosedRedirect from "./ClosedRedirect"
+import AddedToCart from "./AddedToCart"
 
 const PrizeStyles = styled.div`
   .prize-image-reveal {
@@ -65,29 +65,29 @@ const PrizeStyles = styled.div`
       margin: 0 auto 20px auto;
     }
   }
-`;
+`
 
 export default function PrizeReveal({ data, tries, apiUrl }) {
-  const [formSubmitted, setFormSubmitted] = React.useState(false);
-  const [leaderboardData, setLeaderboardData] = React.useState({});
-  const [loading, setLoading] = React.useState(true);
-  const { score, id, previous, submitted } = useGameStateContext();
-  const [showLeaderboardForm, setShowLeaderboardForm] = React.useState(false);
-  const dispatch = useGameDispatchContext();
+  const [formSubmitted, setFormSubmitted] = React.useState(false)
+  const [leaderboardData, setLeaderboardData] = React.useState({})
+  const [loading, setLoading] = React.useState(true)
+  const { score, id, previous, submitted } = useGameStateContext()
+  const [showLeaderboardForm, setShowLeaderboardForm] = React.useState(false)
+  const dispatch = useGameDispatchContext()
 
   const bronzeBottomText = data?.data?.data?.result?.bronze_text_bottom.replace(
     "{total}",
     score
-  );
+  )
   const silverBottomText = data?.data?.data?.result?.silver_text_bottom.replace(
     "{total}",
     score
-  );
+  )
   const goldBottomText = data?.data?.data?.result?.gold_text_bottom.replace(
     "{total}",
     score
-  );
-  const terms = data?.data?.data?.index?.terms_text.replace("{tries}", tries);
+  )
+  const terms = data?.data?.data?.index?.terms_text.replace("{tries}", tries)
 
   const imagesToLoad = [
     hole,
@@ -98,13 +98,13 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
       : previous === "PLAY2"
       ? data?.data?.data?.result?.silver_image?.url
       : data?.data?.data?.result?.gold_image?.url,
-  ];
+  ]
 
   React.useEffect(() => {
     Promise.all(imagesToLoad.map((image) => loadImage(image))).then(() => {
-      setLoading(false);
-    });
-  }, []);
+      setLoading(false)
+    })
+  }, [])
 
   React.useEffect(() => {
     axios
@@ -113,33 +113,33 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
         point: score,
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        console.log(error)
+      })
+  }, [])
 
   React.useEffect(() => {
     axios
       .get(`${apiUrl}/api/v1/leaderboard`)
       .then((res) => {
-        setLeaderboardData(res);
-        setLoading(false);
+        setLeaderboardData(res)
+        setLoading(false)
       })
       .catch((error) =>
         console.log(
           "Oh no! There has been an error fetching the leaderboard!",
           error
         )
-      );
-  }, []);
+      )
+  }, [])
 
   React.useEffect(() => {
     if (leaderboardData?.data?.data.length < 7) {
-      setShowLeaderboardForm(true);
+      setShowLeaderboardForm(true)
     }
     if (leaderboardData?.data?.data[6]?.point < score) {
-      setShowLeaderboardForm(true);
+      setShowLeaderboardForm(true)
     }
-  }, [leaderboardData]);
+  }, [leaderboardData])
 
   React.useEffect(() => {
     gsap.to(".prize-image", {
@@ -147,17 +147,17 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
       duration: 0.8,
       yPercent: -195,
       rotate: 6,
-    });
+    })
 
     gsap.to(".prize-image-bottle", {
       delay: 0.2,
       duration: 0.8,
       yPercent: -202,
-    });
-  }, [loading]);
+    })
+  }, [loading])
 
   React.useEffect(() => {
-    let tl = gsap.timeline();
+    let tl = gsap.timeline()
 
     tl.fromTo(
       ".match-text",
@@ -207,15 +207,15 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
           duration: 0.5,
         },
         "<"
-      );
-  }, [loading]);
+      )
+  }, [loading])
 
   function handleLeaderboardClick() {
-    dispatch({ type: "UPDATE_SUBMITTED", submitted: 1 });
+    dispatch({ type: "UPDATE_SUBMITTED", submitted: 1 })
   }
 
   if (!id) {
-    return <Redirect to="/" />;
+    return <Redirect to="/" />
   }
 
   return (
@@ -378,5 +378,5 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
         </PrizeStyles>
       )}
     </>
-  );
+  )
 }

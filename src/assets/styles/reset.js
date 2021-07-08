@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from "styled-components"
 
 const reset = css`
   *,
@@ -119,6 +119,6 @@ const reset = css`
     border-radius: 0;
     font-family: inherit;
   }
-`;
+`
 
-export default reset;
+export default reset

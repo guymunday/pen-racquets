@@ -1,4 +1,4 @@
-import { css } from "styled-components";
+import { css } from "styled-components"
 
 const global = css`
   :root {
@@ -110,6 +110,6 @@ const global = css`
     max-width: 120px !important;
     margin: 20px auto !important;
   }
-`;
+`
 
-export default global;
+export default global

@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { useCookies } from "react-cookie";
-import { Link } from "react-router-dom";
-import { useGameDispatchContext } from "../reducer/gameReducer";
+import React from "react"
+import styled from "styled-components"
+import { useCookies } from "react-cookie"
+import { Link } from "react-router-dom"
+import { useGameDispatchContext } from "../reducer/gameReducer"
 
 const StyledLink = styled(Link)`
   span {
@@ -10,15 +10,15 @@ const StyledLink = styled(Link)`
     font-size: 0.95rem;
     text-transform: none;
   }
-`;
+`
 
 export default function PlayAgainButton({ children }) {
-  const dispatch = useGameDispatchContext();
-  const [cookies] = useCookies(["tries"]);
+  const dispatch = useGameDispatchContext()
+  const [cookies] = useCookies(["tries"])
 
   function handleClick() {
-    dispatch({ type: "UPDATE_PRIZE", prize: false });
-    dispatch({ type: "UPDATE_SUBMITTED", submitted: 0 });
+    dispatch({ type: "UPDATE_PRIZE", prize: false })
+    dispatch({ type: "UPDATE_SUBMITTED", submitted: 0 })
   }
 
   return (
@@ -39,5 +39,5 @@ export default function PlayAgainButton({ children }) {
         </a>
       )}
     </>
-  );
+  )
 }
