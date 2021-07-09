@@ -2,7 +2,10 @@ import React from "react"
 import styled from "styled-components"
 import axios from "axios"
 import { Redirect } from "react-router-dom"
-import { useGameStateContext } from "../reducer/gameReducer"
+import {
+  useGameStateContext,
+  useGameDispatchContext,
+} from "../reducer/gameReducer"
 import Popup from "./Popup"
 import { badWords } from "../assets/bad-words"
 import tennisPlayer from "../assets/images/tennis-player.png"
@@ -42,10 +45,11 @@ export default function LeaderboardForm({ data }) {
   )
   const [initial, setInitial] = React.useState("")
   const { id, url, score } = useGameStateContext()
+  const dispatch = useGameDispatchContext()
 
   function handleSubmit(e) {
     e.preventDefault()
-
+    if (!initial.trim()) return
     axios
       .post(`${url}/api/v1/leaderboard`, {
         id,
@@ -54,6 +58,7 @@ export default function LeaderboardForm({ data }) {
       .then((res) => {
         setFormSubmitted(true)
         setShouldRedirect(true)
+        dispatch({ type: "UPDATE_SUBMITTED", submitted: 1 })
       })
       .catch((error) => {
         console.log(error)
@@ -72,6 +77,7 @@ export default function LeaderboardForm({ data }) {
 
   function handleReturnButton() {
     setFormSubmitted(true)
+    dispatch({ type: "UPDATE_SUBMITTED", submitted: 1 })
   }
 
   if (shouldRedirect) {

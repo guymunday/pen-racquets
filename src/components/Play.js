@@ -57,11 +57,11 @@ const GameStyles = styled.div`
     pointer-events: none;
     .timer-arch {
       position: absolute;
-      bottom: 90px;
+      bottom: 110px;
       right: 20px;
       display: block;
-      width: 80px;
-      @media screen and (max-width: 500px) {
+      width: 100px;
+      @media screen and (max-width: 550px) {
         left: 50%;
         bottom: 68px;
         transform: translate(-50%, 0);
@@ -79,10 +79,11 @@ const GameStyles = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       z-index: 2;
-      @media screen and (max-width: 500px) {
+      font-size: 3.5rem;
+      @media screen and (max-width: 550px) {
         left: 50%;
         bottom: 10px;
         transform: translate(-50%, 0);
@@ -92,7 +93,7 @@ const GameStyles = styled.div`
     }
     .timer-banner {
       display: none;
-      @media screen and (max-width: 500px) {
+      @media screen and (max-width: 550px) {
         display: block;
         position: absolute;
         bottom: 25px;

@@ -20,8 +20,8 @@ export default function AjaxButton({ setFormSubmitted, ...rest }) {
         action="https://www.penhaligons.com/uk/en/ajax/truck-game/submit"
         method="post"
         ref={formRef}
-        {...rest}
         onSubmit={(e) => handleFormSubmit(e)}
+        {...rest}
       >
         <input type="hidden" name="userScore" value={score} />
         <input type="hidden" name="userAttempts" value="1" />

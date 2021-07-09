@@ -2,10 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import axios from "axios"
 import { Link, Redirect } from "react-router-dom"
-import {
-  useGameStateContext,
-  useGameDispatchContext,
-} from "../reducer/gameReducer"
+import { useGameStateContext } from "../reducer/gameReducer"
 import { gsap } from "gsap"
 import { loadImage } from "../actions/actions"
 import AjaxButton from "./AjaxButton"
@@ -73,7 +70,6 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
   const [loading, setLoading] = React.useState(true)
   const { score, id, previous, submitted } = useGameStateContext()
   const [showLeaderboardForm, setShowLeaderboardForm] = React.useState(false)
-  const dispatch = useGameDispatchContext()
 
   const bronzeBottomText = data?.data?.data?.result?.bronze_text_bottom.replace(
     "{total}",
@@ -210,10 +206,6 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
       )
   }, [loading])
 
-  function handleLeaderboardClick() {
-    dispatch({ type: "UPDATE_SUBMITTED", submitted: 1 })
-  }
-
   if (!id) {
     return <Redirect to="/" />
   }
@@ -245,7 +237,6 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
-                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -281,7 +272,6 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
-                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -317,7 +307,6 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
-                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>
@@ -353,7 +342,6 @@ export default function PrizeReveal({ data, tries, apiUrl }) {
                   to="/leaderboard"
                   className="button-alt"
                   style={{ display: "block" }}
-                  onClick={handleLeaderboardClick}
                 >
                   Go to leaderboard
                 </Link>

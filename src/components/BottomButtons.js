@@ -13,7 +13,7 @@ const Styles = styled.div`
   padding: 15px 15px;
   z-index: 6;
   font-size: 18px;
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 550px) {
     justify-content: space-between;
   }
   .tc-button {

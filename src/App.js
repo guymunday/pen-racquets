@@ -15,6 +15,7 @@ export default function App() {
   const [data, setData] = React.useState({})
   const tries = data?.data?.data?.settings?.total_tries
   const apiUrl = "https://play.penhaligons.com"
+  // const apiUrl = "https://penhaligons.wildishandco.co.uk"
   const dispatch = useGameDispatchContext()
 
   React.useEffect(() => {
